@@ -1,8 +1,8 @@
 
 export const setUserInfo=(user)=>{
-    localStorage.setItem('user',user);
+    localStorage.setItem('user',JSON.stringify(user));
 }
 
 export const getUserInfo = ()=>{
-    return localStorage.getItem('user');
+    return JSON.parse(localStorage.getItem('user'));
 }
