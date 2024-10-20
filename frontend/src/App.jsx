@@ -1,8 +1,8 @@
 import { Route, Routes } from "react-router-dom";
 import "./App.css";
 import LandingPage from "./pages/LandingPage";
-import EventDetail from './pages/EventDetail'
-import EventList from './pages/EventList'
+import EventDetail from './pages/events/EventDetail'
+import EventList from './pages/events/EventList'
 import Login from "./pages/login/Login";
 import Signup from "./pages/signup/Signup";
 import EventForm from "./components/events/EventForm";

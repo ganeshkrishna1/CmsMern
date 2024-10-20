@@ -1,7 +1,17 @@
 import React from 'react';
 import LandingPageBackground from '../assets/landingpagebg.jpg'
+import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
+  const navigate = useNavigate();
+  const handleGetStarted = () =>{
+    navigate('/signup');
+  }
+
+  const handleSignIn = () =>{
+    navigate('/login');
+  }
+
   return (
     <div className="bg-white">
       {/* Hero Section */}
@@ -18,10 +28,10 @@ const LandingPage = () => {
           </p>
           {/* Buttons */}
           <div className="flex flex-col md:flex-row gap-4">
-            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg text-lg font-semibold hover:bg-blue-700 transition duration-300 cursor-pointer" onClick={handleGetStarted}>
               Get Started
             </button>
-            <button className="bg-gray-100 text-blue-600 px-4 py-2 rounded-lg text-lg font-semibold hover:bg-gray-300 transition duration-300">
+            <button className="bg-gray-100 text-blue-600 px-4 py-2 rounded-lg text-lg font-semibold hover:bg-gray-300 transition duration-300 cursor-pointer" onClick={handleSignIn}>
               Sign In
             </button>
           </div>
@@ -66,7 +76,7 @@ const LandingPage = () => {
           <p className="text-lg mb-8">
             Sign up today and start organizing events effortlessly.
           </p>
-          <button className="bg-white text-blue-600 px-4 py-2 rounded-lg text-lg font-semibold hover:bg-gray-200 transition duration-300">
+          <button className="bg-white text-blue-600 px-4 py-2 rounded-lg text-lg font-semibold hover:bg-gray-200 transition duration-300 cursor-pointer" onClick={handleGetStarted}>
             Get Started Now
           </button>
         </div>

@@ -1,7 +1,7 @@
 // src/pages/EventDetail.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import {axiosInstance } from '../services/axiosInstance'
+import {axiosInstance } from '../../services/axiosInstance'
 
 const EventDetail = () => {
   const { id } = useParams();

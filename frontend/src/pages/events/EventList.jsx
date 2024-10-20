@@ -1,7 +1,7 @@
 // src/pages/EventList.jsx
 import React, { useState, useEffect } from 'react';
-import {axiosInstance } from '../services/axiosInstance'
-import EventCard from '../components/events/EventCard';
+import {axiosInstance } from '../../services/axiosInstance'
+import EventCard from '../../components/events/EventCard';
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
