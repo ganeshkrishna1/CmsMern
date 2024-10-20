@@ -1,9 +1,10 @@
 import express from 'express';
-import { registerForEvent } from '../controllers/ticketController.js';
-import { protect } from '../middleware/authMiddleware.js';
+import { bookTicket, getUserTickets } from '../controllers/ticketController.js';
+import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.post('/register', protect, registerForEvent);
+router.route('/book').post(protect, bookTicket);
+router.route('/mytickets').get(protect, getUserTickets);
 
 export default router;

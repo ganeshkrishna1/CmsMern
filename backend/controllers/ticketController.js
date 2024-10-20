@@ -1,29 +1,30 @@
 import asyncHandler from 'express-async-handler';
 import Ticket from '../models/Ticket.js';
-import qr from 'qr-image'; // QR code generator
+import Event from '../models/Event.js';
 
-// @desc Register for an event and generate QR code
-// @route POST /api/tickets/register
-// @access Private/Attendee
-const registerForEvent = asyncHandler(async (req, res) => {
-    const { eventId, ticketPrice } = req.body;
-    const attendeeId = req.user._id;
+// Book a Ticket
+export const bookTicket = asyncHandler(async (req, res) => {
+  const { eventId, price } = req.body;
 
-    const ticket = new Ticket({
-        attendee: attendeeId,
-        event: eventId,
-        ticketPrice,
-        paymentStatus: 'pending',
-    });
+  const event = await Event.findById(eventId);
 
-    const createdTicket = await ticket.save();
+  if (!event) {
+    res.status(404);
+    throw new Error('Event not found');
+  }
 
-    // Generate QR code
-    const qrCode = qr.imageSync(`ticket_${createdTicket._id}`, { type: 'svg' });
-    createdTicket.qrCode = qrCode;
-    await createdTicket.save();
+  const ticket = new Ticket({
+    event: event._id,
+    attendee: req.user._id,
+    price,
+  });
 
-    res.status(201).json({ message: 'Registration successful', ticket: createdTicket });
+  const bookedTicket = await ticket.save();
+  res.status(201).json(bookedTicket);
 });
 
-export { registerForEvent };
+// Get User Tickets
+export const getUserTickets = asyncHandler(async (req, res) => {
+  const tickets = await Ticket.find({ attendee: req.user._id }).populate('event');
+  res.json(tickets);
+});
