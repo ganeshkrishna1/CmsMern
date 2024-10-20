@@ -3,7 +3,7 @@ import Event from '../models/Event.js';
 
 // Create Event
 export const createEvent = asyncHandler(async (req, res) => {
-  const { name, date, venue, description, speakers, ticketsAvailable } = req.body;
+  const { name, date, venue, description, speakers, ticketsAvailable,imageURL } = req.body;
 
   const event = new Event({
     name,
@@ -12,6 +12,7 @@ export const createEvent = asyncHandler(async (req, res) => {
     description,
     speakers,
     ticketsAvailable,
+    imageURL,
     organizer: req.user._id,
   });
 

@@ -15,17 +15,31 @@ const eventSchema = new mongoose.Schema({
   },
   description: {
     type: String,
+    required: true,
   },
   speakers: [
     {
-      name: String,
-      bio: String,
-      topic: String,
+      name: {
+        type: String,
+        required: true,
+      },
+      bio: {
+        type: String,
+        required: true,
+      },
+      topic: {
+        type: String,
+        required: true,
+      },
     },
   ],
   ticketsAvailable: {
     type: Number,
     required: true,
+  },
+  imageURL: {
+    type: String,
+    required: true, // Ensure the image URL is provided
   },
   organizer: {
     type: mongoose.Schema.Types.ObjectId,
