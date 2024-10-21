@@ -46,3 +46,19 @@ export const organizer = (req, res, next) => {
     throw new Error('Not authorized as organizer');
   }
 };
+export const organizerOrAdmin = (req, res, next) => {
+  if (req.user && (req.user.isAdmin || req.user.role === 'Organizer')) {
+    next();
+  } else {
+    res.status(401).json({ message: 'Not authorized as an organizer or admin' });
+  }
+};
+
+export const attendee = (req, res, next) => {
+  if (req.user && req.user.role === 'Attendee') {
+    next();
+  } else {
+    res.status(401).json({ message: 'Not authorized as an attendee' });
+  }
+};
+
