@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import LoginImage from '../../assets/login.jpg';
 import { axiosInstance } from "../../services/axiosInstance";
 import { setUserInfo } from "../../services/localStorageInfo";
@@ -14,6 +14,7 @@ const Login = () => {
       password: "",
     },
   });
+  const navigate = useNavigate();
 
   // Validate email and password
   const validateInputs = () => {
@@ -68,7 +69,14 @@ const Login = () => {
           console.log("Login successful!");
           // Handle successful login (e.g., redirect, store token)
           setUserInfo(response.data);
-          console.log('dashboard');
+          const role = response.data.role;
+          if (role === "admin") {
+            navigate("/admin/dashboard"); // Redirect admin
+          } else if (role === "organizer") {
+            navigate("/events"); // Redirect organizer
+          } else {
+            navigate("/events"); // Redirect attendee to events page
+          }
           
         } else {
           setFormData((prevState) => ({

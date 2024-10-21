@@ -6,3 +6,11 @@ export const setUserInfo=(user)=>{
 export const getUserInfo = ()=>{
     return JSON.parse(localStorage.getItem('user'));
 }
+
+export const removeUserInfo = () =>{
+    localStorage.removeItem('user');
+}
+
+export const getUserRole = () =>{
+    return getUserInfo().role;
+}
