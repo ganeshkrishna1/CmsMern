@@ -1,4 +1,5 @@
 import axios from 'axios'
+import { getUserInfo } from './localStorageInfo';
 
 const BASEURL = 'http://localhost:5000/api';
 
@@ -8,10 +9,12 @@ export const axiosInstance = axios.create({
 
 axiosInstance.interceptors.request.use(
     function (config){
-        const user = localStorage.getItem('user')
+        const user = getUserInfo();
         if(user){
             config.headers.Authorization = `Bearer ${user.token}`;
         }
+        console.log('config',config);
+        
         return config;
     },
     function(error){
@@ -22,7 +25,7 @@ axiosInstance.interceptors.request.use(
 
 axiosInstance.interceptors.response.use(
     function(response){
-        console.log('Response: ',response);
+        // console.log('Response: ',response);
         return response;
     },
     function(error){

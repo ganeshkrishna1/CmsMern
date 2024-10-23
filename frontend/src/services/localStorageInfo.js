@@ -14,3 +14,7 @@ export const removeUserInfo = () =>{
 export const getUserRole = () =>{
     return getUserInfo().role;
 }
+
+export const isOrganizer = () =>{
+    return (getUserRole()==='organizer')? true:false;
+}

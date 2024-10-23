@@ -37,7 +37,7 @@ function App() {
       </Routes>
       
       {getUserInfo() && (
-        <div className="flex h-screen">
+        <div className="flex min-h-screen">
           {/* Sidebar */}
           <Sidebar role={getUserRole()} />
           {/* Main Content */}
@@ -45,8 +45,8 @@ function App() {
             <Routes>
               <Route path="/events" element={<EventList />} />
               <Route path="/events/new" element={<EventForm />} />
-              <Route path="/events/edit/:id" element={<EventForm />} />
-              <Route path="/events/:id" element={<EventDetail />} />
+              <Route path="/events/edit/:eventId" element={<EventForm />} />
+              <Route path="/events/:eventId" element={<EventDetail />} />
               <Route path="/attendee-management" element={<AttendeeManagement />} />
             </Routes>
           </div>

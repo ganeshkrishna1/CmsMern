@@ -37,7 +37,7 @@ function Sidebar({ role }) {
     organizer: [
       { title: "Dashboard", icon: <RxDashboard />, url: () => navigate("/dashboard") },
       { title: "Events", icon: <MdOutlineEventNote />, url: () => navigate("/events") },
-      { title: "Attendees", icon: <IoManSharp />, url: () => navigate("/attendees") },
+      { title: "Attendees", icon: <IoManSharp />, url: () => navigate("/attendee-management") },
       { title: "Notifications", icon: <IoNotifications />, url: () => navigate("/notifications") },
       { title: "LogOut", icon: <CiLogout />, url: () => {
           removeUserInfo();
@@ -48,7 +48,7 @@ function Sidebar({ role }) {
   };
 
   return (
-    <div className={`flex h-screen`}>
+    <div className={`flex min-h-screen`}>
       <div className={`${open ? "w-72" : "w-20"} h-full bg-purple-950 p-5 pt-8 duration-300 relative`}>
         <img
           src={Control}
@@ -62,8 +62,8 @@ function Sidebar({ role }) {
         </div>
         <ul className="pt-6">
           {Menus[role]?.map((menu, index) => (
-            <li key={index} className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-slate-800 rounded-md">
-              <div onClick={menu.url} className="flex items-center gap-x-4">
+            <li onClick={menu.url} key={index} className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-slate-800 rounded-md">
+              <div className="flex items-center gap-x-4">
                 <span>{menu.icon}</span>
                 <span className={`${!open && "hidden"} origin-left duration-200`}>{menu.title}</span>
               </div>

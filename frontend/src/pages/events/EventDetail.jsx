@@ -4,14 +4,14 @@ import { useParams } from 'react-router-dom';
 import {axiosInstance } from '../../services/axiosInstance'
 
 const EventDetail = () => {
-  const { id } = useParams();
+  const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
-        const { data } = await axiosInstance.get(`/events/${id}`);
+        const { data } = await axiosInstance.get(`/events/${eventId}`);
         setEvent(data);
         setLoading(false);
       } catch (error) {
@@ -20,7 +20,7 @@ const EventDetail = () => {
       }
     };
     fetchEvent();
-  }, [id]);
+  }, [eventId]);
 
   if (loading) {
     return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
