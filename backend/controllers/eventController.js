@@ -81,3 +81,38 @@ export const getEventAttendees = async (req, res) => {
     res.status(500).json({ message: 'Server error', error });
   }
 };
+// Delete Event by ID
+export const deleteEvent = asyncHandler(async (req, res) => {
+  const event = await Event.findById(req.params.id);
+
+  if (event) {
+    await event.deleteOne(); // Use deleteOne() to remove the event
+    res.status(200).json({ message: 'Event deleted successfully' });
+  } else {
+    res.status(404);
+    throw new Error('Event not found');
+  }
+});
+
+// Update Event by ID
+export const updateEvent = asyncHandler(async (req, res) => {
+  const { name, date, venue, description, speakers, ticketsAvailable, imageURL } = req.body;
+  
+  const event = await Event.findById(req.params.id);
+
+  if (event) {
+    event.name = name || event.name;
+    event.date = date || event.date;
+    event.venue = venue || event.venue;
+    event.description = description || event.description;
+    event.speakers = speakers || event.speakers;
+    event.ticketsAvailable = ticketsAvailable || event.ticketsAvailable;
+    event.imageURL = imageURL || event.imageURL;
+
+    const updatedEvent = await event.save();
+    res.status(200).json(updatedEvent);
+  } else {
+    res.status(404);
+    throw new Error('Event not found');
+  }
+});
