@@ -6,11 +6,12 @@ import { IoManSharp } from "react-icons/io5";
 import { IoNotifications } from "react-icons/io5";
 import { CiLogout } from "react-icons/ci";
 import { RxDashboard } from "react-icons/rx";
-import { NavLink, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { getUserInfo, removeUserInfo } from "../../services/localStorageInfo";
 
 function Sidebar({ role }) {
   const [open, setOpen] = useState(true);
+  const [activeMenu, setActiveMenu] = useState(""); // Track the active menu
   const navigate = useNavigate();
 
   const Menus = {
@@ -47,9 +48,14 @@ function Sidebar({ role }) {
     ],
   };
 
+  const handleMenuClick = (title, url) => {
+    setActiveMenu(title); // Set the clicked item as active
+    url(); // Navigate to the menu URL
+  };
+
   return (
     <div className={`flex min-h-screen`}>
-      <div className={`${open ? "w-72" : "w-20"} h-full bg-purple-950 p-5 pt-8 duration-300 relative`}>
+      <div className={`${open ? "w-60" : "w-20"} h-full bg-purple-950 p-5 pt-8 duration-300 relative`}>
         <img
           src={Control}
           alt="Control"
@@ -62,7 +68,13 @@ function Sidebar({ role }) {
         </div>
         <ul className="pt-6">
           {Menus[role]?.map((menu, index) => (
-            <li onClick={menu.url} key={index} className="text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 hover:bg-slate-800 rounded-md">
+            <li
+              key={index}
+              onClick={() => handleMenuClick(menu.title, menu.url)}
+              className={`text-gray-300 text-sm flex items-center gap-x-4 cursor-pointer p-2 rounded-md hover:bg-slate-800 ${
+                activeMenu === menu.title ? "bg-slate-800" : "" // Highlight if active
+              }`}
+            >
               <div className="flex items-center gap-x-4">
                 <span>{menu.icon}</span>
                 <span className={`${!open && "hidden"} origin-left duration-200`}>{menu.title}</span>

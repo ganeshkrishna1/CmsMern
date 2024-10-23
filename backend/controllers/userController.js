@@ -4,11 +4,12 @@ import bcrypt from 'bcryptjs';
 import crypto from 'crypto';
 import transporter from '../emailConfig.js';
 
-// Get all users (Admin only)
+// Get all users except admin (Admin only)
 export const getUsers = asyncHandler(async (req, res) => {
-  const users = await User.find({});
+  const users = await User.find({ role: { $ne: 'admin' } }); // Exclude admin users
   res.json(users);
 });
+
 
 // Get user profile
 export const getUserProfile = asyncHandler(async (req, res) => {
