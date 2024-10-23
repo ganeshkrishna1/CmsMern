@@ -5,26 +5,25 @@ import { FaEye } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import { axiosInstance } from "../../services/axiosInstance";
-
-
+import { isOrganizer } from "../../services/localStorageInfo";
 
 const EventCard = ({ event, onDelete }) => {
   const navigate = useNavigate();
 
-  const handleViewDetails =()=>{
+  const handleViewDetails = () => {
     navigate(`/events/${event._id}`);
-  }
+  };
 
-  const handleEditDetails =()=>{
-    navigate(`/events/edit/${event._id}`)
-  }
+  const handleEditDetails = () => {
+    navigate(`/events/edit/${event._id}`);
+  };
 
   const handleDeleteDetails = async () => {
     try {
       await axiosInstance.delete(`/events/${event._id}`);
       onDelete(event._id); // Trigger the delete callback passed from the parent
     } catch (error) {
-      console.error('Error deleting event:', error);
+      console.error("Error deleting event:", error);
     }
   };
 
@@ -49,10 +48,22 @@ const EventCard = ({ event, onDelete }) => {
           Tickets Available: {event.ticketsAvailable}
         </p>
         <div className="flex justify-end items-end gap-4">
-          <FaEye onClick={handleViewDetails} className="text-3xl text-blue-500 cursor-pointer" />
-          <FaEdit onClick={handleEditDetails} className="text-3xl text-orange-400 cursor-pointer" />
-          <AiFillDelete onClick={handleDeleteDetails} className="text-3xl text-red-500 cursor-pointer" />
-          
+          <FaEye
+            onClick={handleViewDetails}
+            className="text-3xl text-blue-500 cursor-pointer"
+          />
+          {isOrganizer() && (
+            <>
+              <FaEdit
+                onClick={handleEditDetails}
+                className="text-3xl text-orange-400 cursor-pointer"
+              />
+              <AiFillDelete
+                onClick={handleDeleteDetails}
+                className="text-3xl text-red-500 cursor-pointer"
+              />
+            </>
+          )}
         </div>
       </div>
     </div>
