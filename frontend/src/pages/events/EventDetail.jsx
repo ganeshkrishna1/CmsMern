@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import {axiosInstance } from '../../services/axiosInstance'
+import { isOrganizer } from '../../services/localStorageInfo';
 
 const EventDetail = () => {
   const { eventId } = useParams();
@@ -56,12 +57,13 @@ const EventDetail = () => {
 
         <p className="mt-4 text-gray-600">Tickets Available: {event.ticketsAvailable}</p>
 
+        {!isOrganizer() &&
         <button
-          className="mt-8 bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors"
-          onClick={() => alert('Ticket booking functionality to be added')}
-        >
-          Book Tickets
-        </button>
+        className="mt-8 bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors"
+        onClick={() => alert('Ticket booking functionality to be added')}
+      >
+        Book Tickets
+      </button>}
       </div>
     </div>
   );

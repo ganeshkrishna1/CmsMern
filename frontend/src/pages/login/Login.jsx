@@ -121,7 +121,7 @@ const Login = () => {
         <div className="w-full md:w-1/2 bg-white p-8 flex items-center justify-center">
           <div className="w-full max-w-md">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold">Hey, hello 👋</h2>
+              <h2 className="text-2xl font-bold">Hey, hello</h2>
               <p className="text-gray-500">
                 Enter the information you entered while registering.
               </p>
