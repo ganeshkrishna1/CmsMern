@@ -18,3 +18,7 @@ export const getUserRole = () =>{
 export const isOrganizer = () =>{
     return (getUserRole()==='organizer')? true:false;
 }
+
+export const isAdmin=()=>{
+    return (getUserRole()==='admin')? true : false;
+}
