@@ -10,6 +10,18 @@ export const getUsers = asyncHandler(async (req, res) => {
   res.json(users);
 });
 
+export const deleteUser = asyncHandler(async (req,res)=>{
+  const user = await User.findById(req.params.userId);
+
+  if (user) {
+    await user.deleteOne(); // Use deleteOne() to remove the event
+    res.status(200).json({ message: 'Event deleted successfully' });
+  } else {
+    res.status(404);
+    throw new Error('Event not found');
+  }
+})
+
 
 // Get user profile
 export const getUserProfile = asyncHandler(async (req, res) => {
