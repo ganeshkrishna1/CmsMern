@@ -1,10 +1,14 @@
+// routes/ticketRoutes.js
 import express from 'express';
-import { bookTicket, getUserTickets } from '../controllers/ticketController.js';
+import { getUserTickets, bookTicket } from '../controllers/ticketController.js';
 import { protect } from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
 
-router.route('/book').post(protect, bookTicket);
-router.route('/mytickets').get(protect, getUserTickets);
+// Route to get all tickets for a specific user
+router.get('/my-tickets', protect, getUserTickets);
+
+// Route to book a new ticket (for reference)
+router.post('/book', protect, bookTicket);
 
 export default router;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { axiosInstance } from '../../services/axiosInstance';
-import { isOrganizer } from '../../services/localStorageInfo';
+import { isAdmin, isOrganizer } from '../../services/localStorageInfo';
 
 const EventDetail = () => {
   const { eventId } = useParams();
@@ -65,6 +65,7 @@ const EventDetail = () => {
           {new Date(event.date).toLocaleDateString()} at {new Date(event.date).toLocaleTimeString()}
         </p>
         <p className="text-gray-600 mt-2">Venue: {event.venue}</p>
+        <p className="text-gray-600 mt-2">Price: {event.price} $</p>
         <p className="text-gray-700 mt-6">{event.description}</p>
 
         <h3 className="text-2xl font-semibold mt-8">Speakers</h3>
@@ -78,7 +79,7 @@ const EventDetail = () => {
 
         <p className="mt-4 text-gray-600">Tickets Available: {event.ticketsAvailable}</p>
 
-        {!isOrganizer() && (
+        {!isOrganizer() || isAdmin() && (
           <button
             className="mt-8 bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors"
             onClick={() => setIsModalOpen(true)} // Open modal on click

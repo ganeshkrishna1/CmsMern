@@ -14,6 +14,8 @@ import Sidebar from "./components/sidebar/Sidebar";
 import { getUserInfo, getUserRole } from "./services/localStorageInfo";
 import AttendeeManagement from "./pages/events/AttendeeManagement";
 import AllUsers from "./pages/users/AllUsers";
+import MyEvents from "./components/events/MyEvents";
+import Dashboard from "./components/dashboard/Dashboard";
 
 
 function App() {
@@ -50,6 +52,9 @@ function App() {
               <Route path="/events/:eventId" element={<EventDetail />} />
               <Route path="/attendee-management" element={<AttendeeManagement />} />
               <Route path="/users" element={<AllUsers />} />
+              <Route path="/myevents" element={<MyEvents />} />
+              <Route path="/dashboard" element={<Dashboard />} />
+
             </Routes>
           </div>
         </div>

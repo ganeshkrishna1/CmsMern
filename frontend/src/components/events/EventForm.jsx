@@ -12,6 +12,7 @@ const EventForm = () => {
     speakers: [{ name: "", bio: "", topic: "" }],
     ticketsAvailable: 0,
     imageURL: "",
+    price:"",
   });
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -149,6 +150,16 @@ const EventForm = () => {
           onChange={handleChange}
           className="mt-1 p-2 border-2 border-blue-200 rounded w-full focus:ring-2 focus:ring-blue-500"
         ></textarea>
+      </div>
+      <div className="mb-4">
+        <label className="block text-gray-700 font-semibold">Price</label>
+        <input
+          type="text"
+          name="price"
+          value={event.price}
+          onChange={handleChange}
+          className="mt-1 p-2 border-2 border-blue-200 rounded w-full focus:ring-2 focus:ring-blue-500"
+        />
       </div>
 
       <div className="mb-4">

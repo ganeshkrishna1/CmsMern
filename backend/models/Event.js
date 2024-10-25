@@ -36,6 +36,10 @@ const eventSchema = new mongoose.Schema({
     ref: 'User',
     required: true,
   },
+  price: {
+    type: Number,
+    required: true,
+  },
   attendees: [
     {
       type: mongoose.Schema.Types.ObjectId,

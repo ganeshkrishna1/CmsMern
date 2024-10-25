@@ -4,7 +4,7 @@ import User from '../models/User.js';
 
 // Create Event
 export const createEvent = asyncHandler(async (req, res) => {
-  const { name, date, venue, description, speakers, ticketsAvailable,imageURL } = req.body;
+  const { name, date, venue, description, speakers, ticketsAvailable, imageURL, price } = req.body;
 
   const event = new Event({
     name,
@@ -15,6 +15,7 @@ export const createEvent = asyncHandler(async (req, res) => {
     ticketsAvailable,
     imageURL,
     organizer: req.user._id,
+    price,
   });
 
   const createdEvent = await event.save();
@@ -39,54 +40,46 @@ export const getEventById = asyncHandler(async (req, res) => {
   }
 });
 
-export const registerAttendee = async (req, res) => {
+// Register Attendee
+export const registerAttendee = asyncHandler(async (req, res) => {
   const { eventId } = req.params;
-  const userId = req.user._id; // Assuming the user is authenticated and we have their ID
+  const userId = req.user._id;
 
-  try {
-    const event = await Event.findById(eventId);
+  const event = await Event.findById(eventId);
 
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    // Check if the user is already registered
-    if (event.attendees.includes(userId)) {
-      return res.status(400).json({ message: 'User already registered for this event' });
-    }
-
-    // Add the user to the event's attendees list
-    event.attendees.push(userId);
-    await event.save();
-
-    res.status(200).json({ message: 'Successfully registered for the event' });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+  if (!event) {
+    return res.status(404).json({ message: 'Event not found' });
   }
-};
 
+  if (event.attendees.includes(userId)) {
+    return res.status(400).json({ message: 'User already registered for this event' });
+  }
 
-export const getEventAttendees = async (req, res) => {
+  event.attendees.push(userId);
+  await event.save();
+
+  res.status(200).json({ message: 'Successfully registered for the event' });
+});
+
+// Get Event Attendees
+export const getEventAttendees = asyncHandler(async (req, res) => {
   const { eventId } = req.params;
 
-  try {
-    const event = await Event.findById(eventId).populate('attendees', 'name email'); // Fetch the event and populate attendee details
+  const event = await Event.findById(eventId).populate('attendees', 'name email');
 
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    res.status(200).json(event.attendees); // Send the attendees list
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+  if (!event) {
+    return res.status(404).json({ message: 'Event not found' });
   }
-};
+
+  res.status(200).json(event.attendees);
+});
+
 // Delete Event by ID
 export const deleteEvent = asyncHandler(async (req, res) => {
   const event = await Event.findById(req.params.id);
 
   if (event) {
-    await event.deleteOne(); // Use deleteOne() to remove the event
+    await event.deleteOne();
     res.status(200).json({ message: 'Event deleted successfully' });
   } else {
     res.status(404);
@@ -96,7 +89,7 @@ export const deleteEvent = asyncHandler(async (req, res) => {
 
 // Update Event by ID
 export const updateEvent = asyncHandler(async (req, res) => {
-  const { name, date, venue, description, speakers, ticketsAvailable, imageURL } = req.body;
+  const { name, date, venue, description, speakers, ticketsAvailable, imageURL, price } = req.body;
   
   const event = await Event.findById(req.params.id);
 
@@ -108,6 +101,7 @@ export const updateEvent = asyncHandler(async (req, res) => {
     event.speakers = speakers || event.speakers;
     event.ticketsAvailable = ticketsAvailable || event.ticketsAvailable;
     event.imageURL = imageURL || event.imageURL;
+    event.price = price || event.price;
 
     const updatedEvent = await event.save();
     res.status(200).json(updatedEvent);
