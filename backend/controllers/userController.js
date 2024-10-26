@@ -69,6 +69,7 @@ export const sendOtp = async (req, res) => {
   }
 };
 
+
 // Verify OTP
 export const verifyOtp = (req, res) => {
   const { otp } = req.body;
@@ -123,3 +124,40 @@ export const resendOtp = async (req, res) => {
     res.status(500).json({ message: 'Error resending OTP' });
   }
 };
+
+// Controller to get counts of Attendees and Organizers
+export const getRoleCounts = asyncHandler(async (req, res) => {
+  try {
+    // Aggregate counts based on role
+    const roleCounts = await User.aggregate([
+      { 
+        $match: { role: { $in: ['attendee', 'organizer'] } } // Filter for relevant roles
+      },
+      {
+        $group: {
+          _id: "$role", 
+          count: { $sum: 1 } // Sum up users in each role
+        }
+      },
+      {
+        $project: {
+          _id: 0, // Exclude _id from output
+          name: "$_id", // Rename _id to name
+          value: "$count" // Rename count to value
+        }
+      }
+    ]);
+
+    // If no attendees or organizers found, return a default array
+    if (!roleCounts.length) {
+      return res.status(404).json([
+        { name: 'attendee', value: 0 },
+        { name: 'organizer', value: 0 }
+      ]);
+    }
+
+    res.status(200).json(roleCounts);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error', error });
+  }
+});

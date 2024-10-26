@@ -16,7 +16,6 @@ import AttendeeManagement from "./pages/events/AttendeeManagement";
 import AllUsers from "./pages/users/AllUsers";
 import Dashboard from "./components/dashboard/Dashboard";
 import MyEvents from "./components/events/MyEvents";
-import Notifications from "./components/notifications/Notifications";
 
 
 function App() {
@@ -55,7 +54,6 @@ function App() {
               <Route path="/users" element={<AllUsers />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/myevents" element={<MyEvents />} />
-              <Route path="/notifications" element={<Notifications />} />
 
             </Routes>
           </div>

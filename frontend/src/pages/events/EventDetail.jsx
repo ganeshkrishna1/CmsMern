@@ -7,16 +7,23 @@ const EventDetail = () => {
   const { eventId } = useParams();
   const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for modal
-  const [isBooking, setIsBooking] = useState(false); // State for booking status
-  const [error, setError] = useState(null); // State for error handling
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isBooking, setIsBooking] = useState(false);
+  const [error, setError] = useState(null);
+  const [hasBooked, setHasBooked] = useState(false); // State for checking if already booked
 
   useEffect(() => {
     const fetchEvent = async () => {
       try {
+        // Fetch event details
         const { data } = await axiosInstance.get(`/events/${eventId}`);
         setEvent(data);
-        debugger
+
+        // Check if the user has already booked this event
+        const bookingResponse = await axiosInstance.get(`/tickets/user`);
+        const bookedEvent = bookingResponse.data.find(ticket => ticket.event._id === eventId);
+        setHasBooked(Boolean(bookedEvent)); // Update the booking status
+
         setLoading(false);
       } catch (error) {
         console.error('Error fetching event details:', error);
@@ -26,21 +33,25 @@ const EventDetail = () => {
     fetchEvent();
   }, [eventId]);
 
-  // Function to handle ticket booking
   const handleBookTicket = async () => {
     setIsBooking(true);
     try {
       const response = await axiosInstance.post('/tickets/book', {
-        eventId: eventId, // Event ID from the URL param
-        price: event.price // Assuming event data contains price
+        eventId: eventId,
+        price: event.price,
       });
       console.log('Ticket booked:', response.data);
-      setIsModalOpen(false); // Close the modal on success
+      setIsModalOpen(false); // Close modal on success
+      setHasBooked(true); // Update booking status
     } catch (error) {
       console.error('Error booking ticket:', error);
-      setError('Could not book the ticket, please try again.');
+      setError(
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : 'Could not book the ticket, please try again.'
+      );
     } finally {
-      setIsBooking(false); // Reset booking state
+      setIsBooking(false);
     }
   };
 
@@ -57,7 +68,7 @@ const EventDetail = () => {
       <div className="bg-white shadow-md rounded-lg p-6">
         <img
           className="w-full h-64 object-cover rounded-lg"
-          src={event.imageURL} // Use imageURL from event data
+          src={event.imageURL}
           alt={event.name}
         />
         <h1 className="text-4xl font-semibold text-gray-800 mt-4">{event.name}</h1>
@@ -79,7 +90,7 @@ const EventDetail = () => {
 
         <p className="mt-4 text-gray-600">Tickets Available: {event.ticketsAvailable}</p>
 
-        {(!isOrganizer() || !isAdmin()) && (
+        {(!isOrganizer() || !isAdmin()) && !hasBooked && (
           <button
             className="mt-8 bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors"
             onClick={() => setIsModalOpen(true)} // Open modal on click
@@ -87,6 +98,8 @@ const EventDetail = () => {
             Book Ticket
           </button>
         )}
+
+        {hasBooked && <p className="mt-4 text-green-500">You have already booked a ticket for this event.</p>}
       </div>
 
       {/* Modal for confirmation */}
@@ -98,19 +111,21 @@ const EventDetail = () => {
             <div className="mt-6 flex justify-end">
               <button
                 className="bg-gray-300 text-gray-700 py-2 px-4 rounded-md mr-4"
-                onClick={() => setIsModalOpen(false)} // Close modal
+                onClick={() => setIsModalOpen(false)}
               >
                 Cancel
               </button>
               <button
-                className={`bg-green-600 text-white py-2 px-4 rounded-md ${isBooking ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'}`}
-                onClick={handleBookTicket} // Trigger booking on click
-                disabled={isBooking} // Disable button during booking
+                className={`bg-green-600 text-white py-2 px-4 rounded-md ${
+                  isBooking ? 'opacity-50 cursor-not-allowed' : 'hover:bg-green-700'
+                }`}
+                onClick={handleBookTicket}
+                disabled={isBooking}
               >
                 {isBooking ? 'Booking...' : 'Confirm'}
               </button>
             </div>
-            {error && <p className="text-red-500 mt-4">{error}</p>} {/* Show error if any */}
+            {error && <p className="text-red-500 mt-4">{error}</p>}
           </div>
         </div>
       )}
