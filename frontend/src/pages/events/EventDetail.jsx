@@ -79,7 +79,7 @@ const EventDetail = () => {
 
         <p className="mt-4 text-gray-600">Tickets Available: {event.ticketsAvailable}</p>
 
-        {!isOrganizer() || isAdmin() && (
+        {(!isOrganizer() || !isAdmin()) && (
           <button
             className="mt-8 bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors"
             onClick={() => setIsModalOpen(true)} // Open modal on click
