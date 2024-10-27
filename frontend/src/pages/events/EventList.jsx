@@ -27,7 +27,7 @@ const EventList = () => {
   }, []);
 
   const handleAddEvents = () => {
-    navigate('/events/new');
+    navigate('/all-users/events/new');
   };
 
   const handleDelete = (eventId) => {

@@ -21,7 +21,7 @@ function Sidebar({ role }) {
         admin: [
             { title: "Dashboard", icon: <RxDashboard />, url: () => navigate("/all-users/dashboard") },
             { title: "Events", icon: <MdOutlineEventNote />, url: () => navigate("/all-users/events") },
-            { title: "Users", icon: <IoManSharp />, url: () => navigate("/users") },
+            { title: "Users", icon: <IoManSharp />, url: () => navigate("/all-users/users") },
             { title: "LogOut", icon: <CiLogout />, url: () => {
                     removeUserInfo();
                     navigate("/login");
@@ -30,7 +30,7 @@ function Sidebar({ role }) {
         ],
         attendee: [
             { title: "Events", icon: <MdOutlineEventNote />, url: () => navigate("/all-users/events") },
-            { title: "My Events", icon: <IoManSharp />, url: () => navigate("/myevents") },
+            { title: "My Events", icon: <IoManSharp />, url: () => navigate("/all-users/myevents") },
             { title: "Notifications", icon: <IoNotifications />, url: () => navigate("/all-users/notifications") },
             { title: "LogOut", icon: <CiLogout />, url: () => {
                     removeUserInfo();
@@ -41,7 +41,7 @@ function Sidebar({ role }) {
         organizer: [
             { title: "Dashboard", icon: <RxDashboard />, url: () => navigate("/all-users/dashboard") },
             { title: "Events", icon: <MdOutlineEventNote />, url: () => navigate("/all-users/events") },
-            { title: "Attendees", icon: <IoManSharp />, url: () => navigate("/attendee-management") },
+            { title: "Attendees", icon: <IoManSharp />, url: () => navigate("/all-users/attendee-management") },
             { title: "Notifications", icon: <IoNotifications />, url: () => navigate("/all-users/notifications") },
             { title: "LogOut", icon: <CiLogout />, url: () => {
                     removeUserInfo();

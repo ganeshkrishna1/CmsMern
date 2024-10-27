@@ -14,7 +14,7 @@ const EventCard = ({ event, onDelete }) => {
   };
 
   const handleEditDetails = () => {
-    navigate(`/events/edit/${event._id}`);
+    navigate(`/all-users/events/edit/${event._id}`);
   };
 
   const handleDeleteDetails = async () => {

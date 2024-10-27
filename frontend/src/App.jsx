@@ -18,7 +18,6 @@ import Dashboard from "./components/dashboard/Dashboard";
 import MyEvents from "./components/events/MyEvents";
 import Notifications from "./components/notifications/Notifications";
 import AllUsersProtectedRoute from "./components/protectedroute/AllUsersProtectedRoute";
-import NotFound from "./pages/notfoundpage/NotFound";
 
 
 function App() {
