@@ -10,7 +10,7 @@ vi.mock('../services/axiosInstance');
 
 describe('Signup Component', () => {
   beforeEach(() => {
-    vi.clearAllMocks(); // Use vi.clearAllMocks instead of jest.clearAllMocks
+    vi.clearAllMocks(); 
   });
 
   test('calls axios and navigates on successful signup', async () => {
