@@ -2,6 +2,7 @@
 import asyncHandler from 'express-async-handler';
 import Ticket from '../models/Ticket.js';
 import Event from '../models/Event.js';
+import { createNotification } from '../controllers/notificationController.js'; // Import createNotification
 
 // Fetch all booked events (tickets) for a specific user
 export const getUserTickets = asyncHandler(async (req, res) => {
@@ -22,7 +23,7 @@ export const getUserTickets = asyncHandler(async (req, res) => {
   }
 });
 
-// Book a Ticket (for reference; can be part of the same controller)
+// Book a Ticket
 export const bookTicket = asyncHandler(async (req, res) => {
   const { eventId, price } = req.body;
 
@@ -51,5 +52,12 @@ export const bookTicket = asyncHandler(async (req, res) => {
   });
 
   const bookedTicket = await ticket.save();
+
+  // Create notification for the user
+  await createNotification(req.user._id, `You have successfully booked a ticket for the event: ${event.name}`, event._id);
+
+  // Create notification for the event organizer
+  await createNotification(event.organizer, `User ${req.user.name} has booked a ticket for your event: ${event.name}`, event._id);
+
   res.status(201).json(bookedTicket);
 });
