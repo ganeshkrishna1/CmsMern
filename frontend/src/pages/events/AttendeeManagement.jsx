@@ -9,13 +9,12 @@ const AttendeeManagement = () => {
   const [loading, setLoading] = useState(false); // Loading state for events
   const [error, setError] = useState(null); // Error state
 
-  // Fetch events when component mounts
   useEffect(() => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const { data } = await axiosInstance.get("/events"); // Fetch events
-        setEvents(data); // Store events
+        const { data } = await axiosInstance.get("/events"); // Fetch events from backend
+        setEvents(data); // Store events directly as provided from the backend
         setLoading(false);
       } catch (err) {
         setError("Error fetching events.");
@@ -24,6 +23,7 @@ const AttendeeManagement = () => {
     };
     fetchEvents();
   }, []);
+  
 
   const toggleAttendees = async (eventId) => {
     // If the attendees for this event are already visible, hide them
@@ -34,36 +34,29 @@ const AttendeeManagement = () => {
       }));
       return; // Exit early since we're hiding
     }
-
-    // If not visible, fetch attendees
-    try {
-      const { data } = await axiosInstance.get(`/tickets/${eventId}/attendees`); // Fetch attendees from ticket controller
-      setAttendees((prevState) => ({
-        ...prevState,
-        [eventId]: data, // Store attendees for this event
-      }));
-
-      // Calculate the number of booked tickets
-      const ticketsBooked = data.length; // Count the number of attendees as tickets booked
-
-      // Update tickets available after fetching attendees
-      setEvents((prevEvents) => 
-        prevEvents.map((event) => 
-          event._id === eventId ? { ...event, ticketsAvailable: event.ticketsAvailable - ticketsBooked } : event
-        )
-      );
-
-    } catch (err) {
-      setError("Error fetching attendees."); // Handle errors
-      console.error("Error fetching attendees:", err); // Log the error for debugging
+  
+    // If not visible and attendees were not fetched yet, fetch them
+    if (!attendees[eventId]) {
+      try {
+        const { data } = await axiosInstance.get(`/tickets/${eventId}/attendees`); // Fetch attendees from ticket controller
+        setAttendees((prevState) => ({
+          ...prevState,
+          [eventId]: data, // Store attendees for this event
+        }));
+      } catch (err) {
+        setError("Error fetching attendees."); // Handle errors
+        console.error("Error fetching attendees:", err); // Log the error for debugging
+      }
     }
-
+  
     // Now set attendees visibility to true after fetching data
     setAttendeesVisibility((prevState) => ({
       ...prevState,
       [eventId]: true, // Show attendees for this event
     }));
   };
+  
+  
 
   if (loading) {
     return (

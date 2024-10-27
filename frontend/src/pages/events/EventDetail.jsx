@@ -45,7 +45,7 @@ const EventDetail = () => {
       setHasBooked(true); // Update booking status
       window.location.reload();
     } catch (error) {
-      console.error('Error booking ticket:', error);
+      console.log('Error booking ticket:', error);
       setError(
         error.response && error.response.data.message
           ? error.response.data.message

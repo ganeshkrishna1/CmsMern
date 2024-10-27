@@ -47,35 +47,50 @@ export const getEventAttendees = asyncHandler(async (req, res) => {
 
 // Book a Ticket
 // Book a new ticket and reduce available tickets
+// Book a Ticket
 export const bookTicket = asyncHandler(async (req, res) => {
-  const { eventId } = req.body;
+  const { eventId, price } = req.body;
 
-  try {
-    // Find the event
-    const event = await Event.findById(eventId);
-
-    if (!event) {
-      return res.status(404).json({ message: 'Event not found' });
-    }
-
-    // Check if tickets are available
-    if (event.ticketsAvailable <= 0) {
-      return res.status(400).json({ message: 'No tickets available for this event' });
-    }
-
-    // Create a new ticket
-    const ticket = await Ticket.create({
-      event: eventId,
-      attendee: req.user._id, // Assuming req.user contains the logged-in user
-    });
-
-    // Decrease the number of available tickets
-    event.ticketsAvailable -= 1;
-    event.attendees.push(req.user._id); // Add attendee to the event
-    await event.save(); // Save the updated event
-
-    res.status(201).json(ticket); // Return the created ticket
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+  // Check if event exists
+  const event = await Event.findById(eventId);
+  if (!event) {
+    res.status(404);
+    throw new Error('Event not found');
   }
+
+  // Check if tickets are available
+  if (event.ticketsAvailable <= 0) {
+    return res.status(400).json({ message: 'No tickets available for this event' });
+  }
+
+  // Check if user already booked a ticket for this event
+  const existingTicket = await Ticket.findOne({
+    event: eventId,
+    attendee: req.user._id,
+  });
+
+  if (existingTicket) {
+    return res.status(400).json({ message: 'You have already booked a ticket for this event' });
+  }
+
+  // Create a new ticket
+  const ticket = new Ticket({
+    event: event._id,
+    attendee: req.user._id,
+    price,
+  });
+
+  const bookedTicket = await ticket.save();
+
+  // Decrease the number of available tickets
+  event.ticketsAvailable -= 1;
+  await event.save(); // Save the updated event with reduced tickets
+
+  // Create notification for the user
+  await createNotification(req.user._id, `You have successfully booked a ticket for the event: ${event.name}`, event._id);
+
+  // Create notification for the event organizer
+  await createNotification(event.organizer, `User ${req.user.name} has booked a ticket for your event: ${event.name}`, event._id);
+
+  res.status(201).json(bookedTicket);
 });
