@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBell, faCheckCircle } from '@fortawesome/free-solid-svg-icons';
+import { IoNotifications } from "react-icons/io5";
+import { CiCircleCheck } from "react-icons/ci";
 import { axiosInstance } from '../../services/axiosInstance';
 
 const Notifications = () => {
@@ -42,7 +42,7 @@ const Notifications = () => {
   return (
     <div className="bg-white p-4 rounded-lg shadow-lg">
       <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-        <FontAwesomeIcon icon={faBell} className="text-blue-500" /> Notifications
+        <IoNotifications /> Notifications
       </h2>
       {loading ? (
         <p className="text-gray-500">Loading notifications...</p>
@@ -64,7 +64,7 @@ const Notifications = () => {
                     onClick={() => markAsRead(notification._id)}
                     className="text-blue-500 hover:text-blue-700"
                   >
-                    <FontAwesomeIcon icon={faCheckCircle} /> Mark as Read
+                    <CiCircleCheck /> Mark as Read
                   </button>
                 )}
               </div>
