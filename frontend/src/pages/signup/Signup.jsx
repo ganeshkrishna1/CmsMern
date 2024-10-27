@@ -81,20 +81,11 @@ const Signup = () => {
         // Make the POST request with axios
         const response = await axiosInstance.post("/auth/register", signupData);
 
-        if (response.data) {
-          console.log("Signup successful!");
-          navigate('/login');
-        } else {
-          setFormData((prevState) => ({
-            ...prevState,
-            errors: { ...prevState.errors, general: response.data.message },
-          }));
-        }
+        navigate('/login');
       } catch (error) {
-        console.error("Error during signup:", error);
         setFormData((prevState) => ({
           ...prevState,
-          errors: { ...prevState.errors, general: error.response.data.message },
+          errors: { ...prevState.errors, general: 'Signup failed! Please try again.' },
         }));
       }
     }
@@ -183,6 +174,7 @@ const Signup = () => {
               <div className="mb-4">
                 <select
                   name="role"
+                  placeholder="role"
                   value={formData.role}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"

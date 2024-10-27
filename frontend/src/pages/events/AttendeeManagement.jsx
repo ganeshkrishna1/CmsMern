@@ -15,6 +15,8 @@ const AttendeeManagement = () => {
       setLoading(true);
       try {
         const { data } = await axiosInstance.get("/events"); // Use axiosInstance here
+        console.log(data);
+        
         setEvents(data); // Assuming API response is an array of events
         setLoading(false);
       } catch (err) {

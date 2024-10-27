@@ -16,9 +16,15 @@ export const getUserRole = () =>{
 }
 
 export const isOrganizer = () =>{
-    return (getUserRole()==='organizer')? true:false;
+    console.log((getUserRole()==='organizer'));
+    
+    return (getUserRole()==='organizer')? true :false;
 }
 
 export const isAdmin=()=>{
     return (getUserRole()==='admin')? true : false;
+}
+
+export const isOrganizerOrAdmin=()=>{
+    return (((getUserRole()==='organizer')||(getUserRole()==='admin'))? true: false);
 }

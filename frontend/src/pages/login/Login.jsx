@@ -71,7 +71,7 @@ const Login = () => {
           setUserInfo(response.data);
           const role = response.data.role;
           if (role === "admin") {
-            navigate("/admin/dashboard"); // Redirect admin
+            navigate("/dashboard"); // Redirect admin
           } else if (role === "organizer") {
             navigate("/events"); // Redirect organizer
           } else {
@@ -131,13 +131,13 @@ const Login = () => {
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <input
-                  type="email"
+                  type="text"
                   name="email"
                   placeholder="Email"
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
+                  // required
                 />
                 {formData.errors.email && (
                   <p className="text-red-500 text-sm">{formData.errors.email}</p>
@@ -152,7 +152,7 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
+                  // required
                 />
                 {formData.errors.password && (
                   <p className="text-red-500 text-sm">{formData.errors.password}</p>
