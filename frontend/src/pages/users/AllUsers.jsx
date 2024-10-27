@@ -67,6 +67,7 @@ function AllUsers() {
               className="absolute top-2 right-2 text-red-500 cursor-pointer hover:text-red-700 transition-colors"
               onClick={() => handleDeleteUser(user._id)}
               size={20}
+              data-testid={`${user._id}`}
             />
             <div className="text-start mt-4 break-words">
               <h2 className="text-gray-800"><span className='text-lg font-semibold'>Name:</span> {user.name}</h2>

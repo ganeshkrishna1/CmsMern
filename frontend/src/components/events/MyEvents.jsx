@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { axiosInstance } from '../../services/axiosInstance';
 
 const MyEvents = () => {
@@ -11,6 +10,8 @@ const MyEvents = () => {
     const fetchTickets = async () => {
       try {
         const { data } = await axiosInstance.get('/tickets/my-tickets');
+        console.log(data);
+        
         setTickets(data);
         setLoading(false);
       } catch (error) {
@@ -30,32 +31,38 @@ const MyEvents = () => {
     return <p className="text-center text-red-500">Error: {error}</p>;
   }
 
+  const validTickets = tickets.filter(ticket => ticket.event !== null);
+
+  if (validTickets.length === 0) {
+    return (
+      <div>
+        <p className="text-center text-gray-500">You have no booked events.</p>
+      </div>
+    );
+  }
+
   return (
     <div className="my-events container mx-auto p-6">
       <h2 className="text-2xl font-semibold text-center mb-6">My Booked Events</h2>
-      {tickets.length === 0 ? (
-        <p className="text-center text-gray-500">You have no booked events.</p>
-      ) : (
-        <ul className="space-y-4">
-          {tickets.map((ticket) => (
-            <li key={ticket._id} className="event-item border border-gray-300 rounded-lg shadow-sm p-4 bg-white">
-              <h3 className="text-lg font-semibold text-blue-600 mb-2">{ticket.event.name}</h3>
-              <p className="text-gray-700">
-                <strong>Date:</strong> {new Date(ticket.event.date).toLocaleDateString()}
-              </p>
-              <p className="text-gray-700">
-                <strong>Venue:</strong> {ticket.event.venue}
-              </p>
-              <p className="text-gray-700">
-                <strong>Price:</strong> ${ticket.price}
-              </p>
-              <p className={`text-sm font-medium ${ticket.paymentStatus === 'paid' ? 'text-green-600' : 'text-red-500'}`}>
-                <strong>Status:</strong> {ticket.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul className="space-y-4">
+        {validTickets.map((ticket) => (
+          <li key={ticket._id} className="event-item border border-gray-300 rounded-lg shadow-sm p-4 bg-white">
+            <h3 className="text-lg font-semibold text-blue-600 mb-2">{ticket.event.name}</h3>
+            <p className="text-gray-700">
+              <strong>Date:</strong> {new Date(ticket.event.date).toLocaleDateString()}
+            </p>
+            <p className="text-gray-700">
+              <strong>Venue:</strong> {ticket.event.venue}
+            </p>
+            <p className="text-gray-700">
+              <strong>Price:</strong> ${ticket.price}
+            </p>
+            <p className={`text-sm font-medium ${ticket.paymentStatus === 'paid' ? 'text-green-600' : 'text-red-500'}`}>
+              <strong>Status:</strong> {ticket.paymentStatus === 'paid' ? 'Paid' : 'Pending'}
+            </p>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
