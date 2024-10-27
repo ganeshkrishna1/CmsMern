@@ -14,10 +14,8 @@ const AttendeeManagement = () => {
     const fetchEvents = async () => {
       setLoading(true);
       try {
-        const { data } = await axiosInstance.get("/events"); // Use axiosInstance here
-        console.log(data);
-        
-        setEvents(data); // Assuming API response is an array of events
+        const { data } = await axiosInstance.get("/events"); // Fetch events
+        setEvents(data); // Store events
         setLoading(false);
       } catch (err) {
         setError("Error fetching events.");
@@ -34,27 +32,37 @@ const AttendeeManagement = () => {
         ...prevState,
         [eventId]: false,
       }));
-    } else {
-      // If not visible, fetch attendees and show them
-      if (!attendees[eventId]) {
-        try {
-          const { data } = await axiosInstance.get(
-            `/events/${eventId}/attendees`
-          ); // Use axiosInstance here
-          setAttendees((prevState) => ({
-            ...prevState,
-            [eventId]: data, // Assuming API response is an array of attendees
-          }));
-        } catch (err) {
-          setError("Error fetching attendees.");
-        }
-      }
-
-      setAttendeesVisibility((prevState) => ({
-        ...prevState,
-        [eventId]: true, // Show attendees for this event
-      }));
+      return; // Exit early since we're hiding
     }
+
+    // If not visible, fetch attendees
+    try {
+      const { data } = await axiosInstance.get(`/tickets/${eventId}/attendees`); // Fetch attendees from ticket controller
+      setAttendees((prevState) => ({
+        ...prevState,
+        [eventId]: data, // Store attendees for this event
+      }));
+
+      // Calculate the number of booked tickets
+      const ticketsBooked = data.length; // Count the number of attendees as tickets booked
+
+      // Update tickets available after fetching attendees
+      setEvents((prevEvents) => 
+        prevEvents.map((event) => 
+          event._id === eventId ? { ...event, ticketsAvailable: event.ticketsAvailable - ticketsBooked } : event
+        )
+      );
+
+    } catch (err) {
+      setError("Error fetching attendees."); // Handle errors
+      console.error("Error fetching attendees:", err); // Log the error for debugging
+    }
+
+    // Now set attendees visibility to true after fetching data
+    setAttendeesVisibility((prevState) => ({
+      ...prevState,
+      [eventId]: true, // Show attendees for this event
+    }));
   };
 
   if (loading) {
@@ -74,7 +82,7 @@ const AttendeeManagement = () => {
       <h1 className="text-4xl font-extrabold text-center text-gray-800 mb-10">
         My Created Events
       </h1>
-      {events.length >0 ? (
+      {events.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {events.map((event) => (
             <div
@@ -112,17 +120,13 @@ const AttendeeManagement = () => {
                   className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 rounded-lg transition-colors duration-200"
                   onClick={() => toggleAttendees(event._id)}
                 >
-                  {attendeesVisibility[event._id]
-                    ? "Hide Attendees"
-                    : "View Attendees"}
+                  {attendeesVisibility[event._id] ? "Hide Attendees" : "View Attendees"}
                 </button>
 
                 {/* Attendees List - Visible only if the button is toggled */}
                 {attendeesVisibility[event._id] && attendees[event._id] && (
                   <div className="mt-6">
-                    <h3 className="text-xl font-bold text-gray-900 mb-4">
-                      Attendees
-                    </h3>
+                    <h3 className="text-xl font-bold text-gray-900 mb-4">Attendees</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       {attendees[event._id].map((attendee) => (
                         <div
@@ -135,9 +139,7 @@ const AttendeeManagement = () => {
                                 {attendee.name.charAt(0)}
                               </span>
                             </div>
-                            <span className="font-semibold text-gray-900">
-                              {attendee.name}
-                            </span>
+                            <span className="font-semibold text-gray-900">{attendee.name}</span>
                             <a
                               href={`mailto:${attendee.email}`}
                               className="text-blue-500 underline mt-2"
@@ -155,9 +157,7 @@ const AttendeeManagement = () => {
           ))}
         </div>
       ) : (
-        <div className="text-center">
-          No events found. Please create some events first.
-        </div>
+        <div className="text-center">No events found. Please create some events first.</div>
       )}
     </div>
   );

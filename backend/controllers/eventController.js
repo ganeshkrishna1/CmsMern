@@ -75,14 +75,20 @@ export const registerAttendee = async (req, res) => {
 export const getEventAttendees = asyncHandler(async (req, res) => {
   const { eventId } = req.params;
 
+  // Fetch the event and populate attendees
   const event = await Event.findById(eventId).populate('attendees', 'name email');
+  console.log("Event data:", event); // Log the event for debugging
 
   if (!event) {
     return res.status(404).json({ message: 'Event not found' });
   }
 
-  res.status(200).json(event.attendees);
+  // Send the list of attendees if they exist
+  const attendeesList = event.attendees ? event.attendees : [];
+  console.log("Attendees list:", attendeesList); // Log the attendees list
+  res.status(200).json(attendeesList);
 });
+
 
 // Delete Event by ID
 export const deleteEvent = asyncHandler(async (req, res) => {

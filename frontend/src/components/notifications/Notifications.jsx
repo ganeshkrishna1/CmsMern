@@ -28,12 +28,9 @@ const Notifications = () => {
 
   const markAsRead = async (id) => {
     try {
-      await axiosInstance.patch(`/notifications/${id}/read`, {}, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      await axiosInstance.patch(`/notifications/${id}/read`, {});
       fetchNotifications();
+      window.location.reload();
     } catch (error) {
       console.error('Error marking notification as read', error);
     }

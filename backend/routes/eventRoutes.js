@@ -26,7 +26,7 @@ router.route('/')
 router.post('/:eventId/register', protect, attendee, registerAttendee);
 
 // Route for getting event attendees (placed before any :id routes)
-router.get('/:eventId/attendees', protect, organizerOrAdmin, getEventAttendees);
+router.get('/:eventId/attendees', protect, organizer, getEventAttendees);
 
 router.get('/organizer/:organizerId/attendee-counts', protect, organizerOrAdmin, getEventsByOrganizerWithAttendeeCounts);
 

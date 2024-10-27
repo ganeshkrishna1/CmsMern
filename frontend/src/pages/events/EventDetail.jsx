@@ -43,6 +43,7 @@ const EventDetail = () => {
       console.log('Ticket booked:', response.data);
       setIsModalOpen(false); // Close modal on success
       setHasBooked(true); // Update booking status
+      window.location.reload();
     } catch (error) {
       console.error('Error booking ticket:', error);
       setError(
