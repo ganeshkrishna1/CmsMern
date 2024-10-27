@@ -1,6 +1,5 @@
-// src/components/EventCard.jsx
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FaEye } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
@@ -61,6 +60,7 @@ const EventCard = ({ event, onDelete }) => {
               <AiFillDelete
                 onClick={handleDeleteDetails}
                 className="text-3xl text-red-500 cursor-pointer"
+                data-testid={`${event._id}`}
               />
             </>
           )}

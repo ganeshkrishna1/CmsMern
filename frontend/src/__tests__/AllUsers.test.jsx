@@ -41,13 +41,12 @@ describe('AllUsers Component', () => {
   });
 
   test('deletes a user', async () => {
-    axiosInstance.delete.mockResolvedValueOnce({}); 
+    axiosInstance.delete.mockResolvedValueOnce({});
     render(<AllUsers />);
 
-   
     await waitFor(() => screen.getByText('Manage Users'));
 
-    const deleteIcon = await screen.findByTestId(1);
+    const deleteIcon = await screen.findByTestId('1'); // Ensure this corresponds to the user's ID
     fireEvent.click(deleteIcon);
 
     // Verify that the user has been removed from the document
@@ -63,17 +62,22 @@ describe('AllUsers Component', () => {
     await waitFor(() => {
       expect(screen.getByText('Manage Users')).toBeInTheDocument();
     });
-    // Add assertions for error handling, e.g., an error message
+
+    // Assert that an error message is displayed
+    expect(await screen.findByText('Could not fetch users. Please try again.')).toBeInTheDocument();
   });
 
   test('handles errors during user deletion', async () => {
-    axiosInstance.delete.mockRejectedValueOnce(new Error('Error deleting user'));
+    axiosInstance.delete.mockRejectedValueOnce(new Error('Could not delete user. Please try again.'));
     render(<AllUsers />);
 
     await waitFor(() => screen.getByText('Manage Users'));
 
     // Click the delete button for John Doe
-    const deleteIcon = await screen.findByTestId(1);
+    const deleteIcon = await screen.findByTestId('1'); // Ensure this corresponds to the user's ID
     fireEvent.click(deleteIcon);
+
+    // Assert that an error message is displayed
+    expect(await screen.findByText('Could not delete user. Please try again.')).toBeInTheDocument();
   });
 });
