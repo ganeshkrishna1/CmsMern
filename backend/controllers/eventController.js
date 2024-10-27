@@ -3,6 +3,8 @@ import Event from '../models/Event.js';
 import Ticket from '../models/Ticket.js';
 import User from '../models/User.js';
 import mongoose from 'mongoose';
+import { createNotification } from '../controllers/notificationController.js'; // Import the notification function
+
 
 // Create Event
 export const createEvent = asyncHandler(async (req, res) => {
@@ -42,26 +44,32 @@ export const getEventById = asyncHandler(async (req, res) => {
   }
 });
 
-// Register Attendee
-export const registerAttendee = asyncHandler(async (req, res) => {
+export const registerAttendee = async (req, res) => {
   const { eventId } = req.params;
-  const userId = req.user._id;
+  const userId = req.user.id;
 
-  const event = await Event.findById(eventId);
+  try {
+      console.log("Registering attendee. User ID:", userId, "Event ID:", eventId);
+      const event = await Event.findById(eventId);
+      if (!event) {
+          console.log("Event not found:", eventId);
+          return res.status(404).json({ message: 'Event not found' });
+      }
 
-  if (!event) {
-    return res.status(404).json({ message: 'Event not found' });
+      event.attendees.push(userId);
+      await event.save();
+
+      // Create notifications for the user and the event organizer
+      await createNotification(userId, `You have successfully booked the event: ${event.name}`, event._id);
+      await createNotification(event.organizer, `User ${req.user.name} has booked the event: ${event.name}`, event._id);
+
+      console.log("Notifications sent successfully");
+      res.status(201).json({ message: 'Successfully registered for the event' });
+  } catch (error) {
+      console.error("Error in registerAttendee:", error);
+      res.status(400).json({ message: error.message });
   }
-
-  if (event.attendees.includes(userId)) {
-    return res.status(400).json({ message: 'User already registered for this event' });
-  }
-
-  event.attendees.push(userId);
-  await event.save();
-
-  res.status(200).json({ message: 'Successfully registered for the event' });
-});
+};
 
 // Get Event Attendees
 export const getEventAttendees = asyncHandler(async (req, res) => {
@@ -185,7 +193,7 @@ export const getEventsByOrganizerWithAttendeeCounts = asyncHandler(async (req, r
     // Format the response
     const formattedEvents = ticketAggregation.map(event => ({
       name: event._id,
-      attendees: event.attendees,
+      value: event.attendees,
     }));
 
     res.status(200).json(formattedEvents);

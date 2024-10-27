@@ -30,7 +30,6 @@ router.get('/:eventId/attendees', protect, organizerOrAdmin, getEventAttendees);
 
 router.get('/organizer/:organizerId/attendee-counts', protect, organizerOrAdmin, getEventsByOrganizerWithAttendeeCounts);
 
-
 // Routes for getting, updating, and deleting a specific event by ID
 router.route('/:id')
   .get(getEventById)                   // Public

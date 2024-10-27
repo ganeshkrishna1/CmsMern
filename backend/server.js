@@ -9,6 +9,7 @@ import ticketRoutes from './routes/ticketRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import dashboardRoutes from './routes/dashboardRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js'; // Add this line
 
 dotenv.config();
 connectDB();
@@ -24,7 +25,7 @@ app.use('/api/tickets', ticketRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-
+app.use('/api/notifications', notificationRoutes); 
 
 app.use(notFound);
 app.use(errorHandler);
