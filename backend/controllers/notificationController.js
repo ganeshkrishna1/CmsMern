@@ -31,3 +31,12 @@ export const markAsRead = async (req, res) => {
         res.status(500).json({ message: error.message });
     }
 };
+// Fetch count of unread notifications for a specific user
+export const fetchUnreadNotificationCount = async (req, res) => {
+    try {
+        const count = await Notification.countDocuments({ userId: req.user.id, isRead: false });
+        res.json({ count });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
