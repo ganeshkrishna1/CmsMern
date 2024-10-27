@@ -83,7 +83,7 @@ const EventForm = () => {
         // Create new event
         await axiosInstance.post("/events", event);
       }
-      navigate("/events"); // Redirect to the event list or any other page after submission
+      navigate("/all-users/events"); // Redirect to the event list or any other page after submission
     } catch (error) {
       console.error("Error saving event:", error);
     }

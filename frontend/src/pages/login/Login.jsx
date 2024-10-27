@@ -71,11 +71,11 @@ const Login = () => {
           setUserInfo(response.data);
           const role = response.data.role;
           if (role === "admin") {
-            navigate("/dashboard"); // Redirect admin
+            navigate("/all-users/dashboard"); // Redirect admin
           } else if (role === "organizer") {
-            navigate("/events"); // Redirect organizer
+            navigate("/all-users/events"); // Redirect organizer
           } else {
-            navigate("/events"); // Redirect attendee to events page
+            navigate("/all-users/events"); // Redirect attendee to events page
           }
           
         } else {

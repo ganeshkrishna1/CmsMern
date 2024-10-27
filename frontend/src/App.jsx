@@ -17,6 +17,8 @@ import AllUsers from "./pages/users/AllUsers";
 import Dashboard from "./components/dashboard/Dashboard";
 import MyEvents from "./components/events/MyEvents";
 import Notifications from "./components/notifications/Notifications";
+import AllUsersProtectedRoute from "./components/protectedroute/AllUsersProtectedRoute";
+import NotFound from "./pages/notfoundpage/NotFound";
 
 
 function App() {
@@ -47,16 +49,21 @@ function App() {
           {/* Main Content */}
           <div className="flex-1 p-2">
             <Routes>
-              <Route path="/events" element={<EventList />} />
-              <Route path="/events/new" element={<EventForm />} />
-              <Route path="/events/edit/:eventId" element={<EventForm />} />
-              <Route path="/events/:eventId" element={<EventDetail />} />
-              <Route path="/attendee-management" element={<AttendeeManagement />} />
-              <Route path="/users" element={<AllUsers />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/myevents" element={<MyEvents />} />
-              <Route path="/notifications" element={<Notifications />} />
-
+              <Route path="/all-users" element={<AllUsersProtectedRoute />} > 
+              <Route path="events" element={<EventList />} /> 
+              <Route path="events/:eventId" element={<EventDetail />} /> 
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="notifications" element={<Notifications />} />
+              <Route path="users" element={<AllUsers />} /> 
+              
+              <Route path="events/new" element={<EventForm />} />
+              <Route path="events/edit/:eventId" element={<EventForm />} /> 
+              
+              <Route path="attendee-management" element={<AttendeeManagement />} /> 
+              
+              <Route path="myevents" element={<MyEvents />} />
+              </Route>
+              
             </Routes>
           </div>
         </div>

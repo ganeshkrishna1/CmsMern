@@ -10,7 +10,7 @@ const EventCard = ({ event, onDelete }) => {
   const navigate = useNavigate();
 
   const handleViewDetails = () => {
-    navigate(`/events/${event._id}`);
+    navigate(`/all-users/events/${event._id}`);
   };
 
   const handleEditDetails = () => {

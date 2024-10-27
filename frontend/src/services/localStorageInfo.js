@@ -12,7 +12,7 @@ export const removeUserInfo = () =>{
 }
 
 export const getUserRole = () =>{
-    return getUserInfo().role;
+    return getUserInfo()?.role || null;
 }
 
 export const isOrganizer = () =>{
