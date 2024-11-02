@@ -84,7 +84,7 @@ describe('EventList Component', () => {
     fireEvent.click(screen.getByTitle('AddEvents'));
 
     // Assert that the navigation occurred
-    expect(navigateMock).toHaveBeenCalledWith('/events/new');
+    expect(navigateMock).toHaveBeenCalledWith('/all-users/events/new');
   });
 
   test('deletes an event', async () => {
