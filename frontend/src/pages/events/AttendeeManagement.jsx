@@ -14,6 +14,7 @@ const AttendeeManagement = () => {
       setLoading(true);
       try {
         const { data } = await axiosInstance.get("/events"); // Fetch events from backend
+        console.log('data',data);
         setEvents(data); // Store events directly as provided from the backend
         setLoading(false);
       } catch (err) {
@@ -44,7 +45,7 @@ const AttendeeManagement = () => {
           [eventId]: data, // Store attendees for this event
         }));
       } catch (err) {
-        setError("Error fetching attendees."); // Handle errors
+        setError(err.response.data.message); // Handle errors
         console.error("Error fetching attendees:", err); // Log the error for debugging
       }
     }
