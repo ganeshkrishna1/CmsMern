@@ -12,7 +12,9 @@ import dashboardRoutes from './routes/dashboardRoutes.js';
 import notificationRoutes from './routes/notificationRoutes.js'; // Add this line
 import paymentRoutes from './routes/paymentRoutes.js';
 import bookingRoutes from './routes/bookingRoutes.js';
+import feedbackRoutes from './routes/feedbackRoutes.js';
  
+
 dotenv.config();
 connectDB();
 
@@ -30,6 +32,7 @@ app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/notifications', notificationRoutes); 
 app.use('/api/payments', paymentRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 
 

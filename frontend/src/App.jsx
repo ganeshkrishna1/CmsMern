@@ -21,6 +21,9 @@ import AllUsersProtectedRoute from "./components/protectedroute/AllUsersProtecte
 import BookingSummary from "./pages/payments/BookingSummary";
 import PaymentPage from "./pages/payments/PaymentPage";
 import ConfirmationPage from "./pages/payments/ConfirmationPage";
+import Feedback from "../../backend/models/Feedback";
+import FeedbackForm from "./pages/feedback/Feedback";
+import FeedbackList from "./pages/feedback/FeedbackList";
 
 function App() {
   const navigate = useNavigate();
@@ -66,6 +69,8 @@ function App() {
                 <Route path="booking-summary/:eventId" element={<BookingSummary />} />
                 <Route path="payment/:bookingId" element={<PaymentPage />} />
                 <Route path="confirmation" element={<ConfirmationPage />} />
+                <Route path="events/feedback/:eventId" element={<FeedbackForm />} />
+                <Route path="events/view-feedback/:eventId" element={<FeedbackList />} />
 
               </Route>
 

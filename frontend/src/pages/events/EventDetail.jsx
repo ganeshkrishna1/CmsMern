@@ -28,8 +28,11 @@ const EventDetail = () => {
     fetchEvent();
   }, [eventId]);
 
+  // Check if the event has already passed
+  const eventCompleted = new Date(event?.date) < new Date();
+
   const handleBookTicket = () => {
-    if (!isOrganizerOrAdmin() && !hasBooked) {
+    if (!isOrganizerOrAdmin() && !hasBooked && !eventCompleted) {
       // Redirect to the booking summary page
       navigate(`/all-users/booking-summary/${eventId}`);
     }
@@ -66,7 +69,7 @@ const EventDetail = () => {
 
         <p className="mt-4 text-gray-600">Tickets Available: {event.ticketsAvailable}</p>
 
-        {!isOrganizerOrAdmin() && !hasBooked && (
+        {!isOrganizerOrAdmin() && !hasBooked && !eventCompleted && (
           <button
             className="mt-8 bg-green-600 text-white py-2 px-6 rounded-md hover:bg-green-700 transition-colors"
             onClick={handleBookTicket}
@@ -76,6 +79,8 @@ const EventDetail = () => {
         )}
 
         {hasBooked && <p className="mt-4 text-green-500">You have already booked a ticket for this event.</p>}
+
+        {eventCompleted && <p className="mt-4 text-red-500 font-bold">This event has already completed.</p>}
       </div>
     </div>
   );
