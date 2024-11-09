@@ -21,7 +21,7 @@ const ticketSchema = new mongoose.Schema({
   paymentStatus: {
     type: String,
     enum: ['pending', 'paid'],
-    default: 'pending',
+    default: 'paid',
   },
 }, {
   timestamps: true,

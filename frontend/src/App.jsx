@@ -18,7 +18,9 @@ import Dashboard from "./components/dashboard/Dashboard";
 import MyEvents from "./components/events/MyEvents";
 import Notifications from "./components/notifications/Notifications";
 import AllUsersProtectedRoute from "./components/protectedroute/AllUsersProtectedRoute";
-
+import BookingSummary from "./pages/payments/BookingSummary";
+import PaymentPage from "./pages/payments/PaymentPage";
+import ConfirmationPage from "./pages/payments/ConfirmationPage";
 
 function App() {
   const navigate = useNavigate();
@@ -61,6 +63,10 @@ function App() {
                 <Route path="attendee-management" element={<AttendeeManagement />} />
 
                 <Route path="myevents" element={<MyEvents />} />
+                <Route path="booking-summary/:eventId" element={<BookingSummary />} />
+                <Route path="payment/:bookingId" element={<PaymentPage />} />
+                <Route path="confirmation" element={<ConfirmationPage />} />
+
               </Route>
 
             </Routes>

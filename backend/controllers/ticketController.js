@@ -63,16 +63,6 @@ export const bookTicket = asyncHandler(async (req, res) => {
     return res.status(400).json({ message: 'No tickets available for this event' });
   }
 
-  // Check if user already booked a ticket for this event
-  const existingTicket = await Ticket.findOne({
-    event: eventId,
-    attendee: req.user._id,
-  });
-
-  if (existingTicket) {
-    return res.status(400).json({ message: 'You have already booked a ticket for this event' });
-  }
-
   // Create a new ticket
   const ticket = new Ticket({
     event: event._id,
