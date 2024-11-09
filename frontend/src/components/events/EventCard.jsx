@@ -48,9 +48,9 @@ const handleDeleteDetails = async () => {
 
 
   // Handle feedback submission
-  const handleGiveFeedback = () => {
-    navigate(`/all-users/events/feedback/${event._id}`);
-  };
+  // const handleGiveFeedback = () => {
+  //   navigate(`/all-users/events/feedback/${event._id}`);
+  // };
 
   // Handle viewing feedback (for organizers/admins)
 const handleViewFeedback = () => {
@@ -122,15 +122,15 @@ const handleViewFeedback = () => {
           )}
         </div>
 
-{eventCompleted && !isOrganizerOrAdmin() && (
+{/* {eventCompleted && !isOrganizerOrAdmin() && (
   <button
     onClick={handleGiveFeedback}
     className="mt-4 bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
   >
     Give Feedback
   </button>
-)}
-{eventCompleted && isOrganizerOrAdmin() && (
+)} */}
+{ isOrganizerOrAdmin() && (
   <button
     onClick={handleViewFeedback}
     className="mt-4 bg-green-500 text-white py-2 px-4 rounded hover:bg-green-600"
