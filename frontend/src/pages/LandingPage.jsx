@@ -21,10 +21,10 @@ const LandingPage = () => {
       >
         <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col justify-center items-center text-center">
           <h1 className="text-white text-4xl md:text-6xl font-bold mb-4">
-            Manage Your Conference Seamlessly
+            Manage Your Events Seamlessly
           </h1>
           <p className="text-white text-lg md:text-xl mb-6">
-            Effortlessly plan and manage conferences with ticketing, attendee registration, and more.
+            Effortlessly plan and manage Events with ticketing, attendee registration, and more.
           </p>
           {/* Buttons */}
           <div className="flex flex-col md:flex-row gap-4">
