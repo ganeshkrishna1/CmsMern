@@ -26,11 +26,18 @@ export const createEvent = asyncHandler(async (req, res) => {
   res.status(201).json(createdEvent);
 });
 
-// Get All Events
-export const getEvents = asyncHandler(async (req, res) => {
-  const events = await Event.find({});
-  res.json(events);
-});
+// In eventController.js
+export const getEvents = async (req, res) => {
+  try {
+    // Fetch and sort events by date in ascending order
+    const events = await Event.find({}).sort({ date: 1 });
+    res.json(events);
+  } catch (error) {
+    console.error('Error fetching events:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 
 // Get Event by ID
 export const getEventById = asyncHandler(async (req, res) => {
