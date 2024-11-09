@@ -40,7 +40,7 @@ function App() {
         <Route path="/otp-verification" element={<OtpVerification />} />
         <Route path="/update-password" element={<UpdatePassword />} />
       </Routes>
-      
+
       {getUserInfo() && (
         <div className="flex min-h-screen">
           {/* Sidebar */}
@@ -48,21 +48,21 @@ function App() {
           {/* Main Content */}
           <div className="flex-1 p-2">
             <Routes>
-              <Route path="/all-users" element={<AllUsersProtectedRoute />} > 
-              <Route path="events" element={<EventList />} /> 
-              <Route path="events/:eventId" element={<EventDetail />} /> 
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="notifications" element={<Notifications />} />
-              <Route path="users" element={<AllUsers />} /> 
-              
-              <Route path="events/new" element={<EventForm />} />
-              <Route path="events/edit/:eventId" element={<EventForm />} /> 
-              
-              <Route path="attendee-management" element={<AttendeeManagement />} /> 
-              
-              <Route path="myevents" element={<MyEvents />} />
+              <Route path="/all-users" element={<AllUsersProtectedRoute />} >
+                <Route path="events" element={<EventList />} />
+                <Route path="events/:eventId" element={<EventDetail />} />
+                <Route path="dashboard" element={<Dashboard />} />
+                <Route path="notifications" element={<Notifications />} />
+                <Route path="users" element={<AllUsers />} />
+
+                <Route path="events/new" element={<EventForm />} />
+                <Route path="events/edit/:eventId" element={<EventForm />} />
+
+                <Route path="attendee-management" element={<AttendeeManagement />} />
+
+                <Route path="myevents" element={<MyEvents />} />
               </Route>
-              
+
             </Routes>
           </div>
         </div>

@@ -4,7 +4,7 @@ import { FaEye } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import { axiosInstance } from "../../services/axiosInstance";
-import { isOrganizer } from "../../services/localStorageInfo";
+import { isOrganizerOrAdmin } from "../../services/localStorageInfo";
 
 const EventCard = ({ event, onDelete }) => {
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const EventCard = ({ event, onDelete }) => {
             onClick={handleViewDetails}
             className="text-3xl text-blue-500 cursor-pointer"
           />
-          {isOrganizer() && (
+          {isOrganizerOrAdmin() && (
             <>
               <FaEdit
                 onClick={handleEditDetails}
