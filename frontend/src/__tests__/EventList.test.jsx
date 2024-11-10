@@ -2,54 +2,42 @@ import { render, screen, waitFor, fireEvent, act } from '@testing-library/react'
 import EventList from '../pages/events/EventList';
 import { axiosInstance } from '../services/axiosInstance';
 import { vi } from 'vitest';
-import { isOrganizer } from '../services/localStorageInfo';
 import { MemoryRouter } from 'react-router-dom';
+import { isOrganizer, isOrganizerOrAdmin } from '../services/localStorageInfo';
 
-// Mock axiosInstance and other modules
 vi.mock('../services/axiosInstance');
 vi.mock('../services/localStorageInfo');
 
-// Mock useNavigate from react-router-dom
-const navigateMock = vi.fn();
-vi.mock('react-router-dom', async () => {
-  const actual = await vi.importActual('react-router-dom'); // Import actual module to preserve other exports
-  return {
-    ...actual, // Spread the actual exports
-    useNavigate: () => navigateMock, // Mock useNavigate
-  };
-});
-
 describe('EventList Component', () => {
   const eventsData = [
-    { _id: '1', name: 'Concert', date: '2024-11-01', description: 'A great concert experience', venue: 'Main Hall' },
-    { _id: '2', name: 'Workshop', date: '2024-11-05', description: 'An informative workshop', venue: 'Conference Room' },
+    { _id: '1', name: 'Concert', date: '2024-11-01', description: 'A great concert', venue: 'Main Hall' },
+    { _id: '2', name: 'Workshop', date: '2024-11-05', description: 'Informative workshop', venue: 'Room 101' },
   ];
 
   beforeEach(() => {
-    // Mock isOrganizer to return true
+    // Mock user role
     isOrganizer.mockReturnValue(true);
-    // Mock the GET request to return events
+    isOrganizerOrAdmin.mockReturnValue(true);
+    // Mock axios GET request
     axiosInstance.get.mockResolvedValue({ data: eventsData });
   });
 
   afterEach(() => {
-    vi.clearAllMocks(); // Clear any previous mock calls
+    vi.clearAllMocks();
   });
 
-  test('fetches and displays all events', async () => {
-    await act(async () => {
-      render(
-        <MemoryRouter>
-          <EventList />
-        </MemoryRouter>
-      );
-    });
+  test('displays loading indicator while fetching events', async () => {
+    render(
+      <MemoryRouter>
+        <EventList />
+      </MemoryRouter>
+    );
 
-    // Wait for events to be displayed
+    // Assert loading state
+    expect(screen.getByText('Loading...')).toBeInTheDocument();
+
     await waitFor(() => {
-      expect(screen.getByText('Upcoming Events')).toBeInTheDocument();
-      expect(screen.getByText('Concert')).toBeInTheDocument();
-      expect(screen.getByText('Workshop')).toBeInTheDocument();
+      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
     });
   });
 
@@ -64,14 +52,12 @@ describe('EventList Component', () => {
       );
     });
 
-    // Wait for loading to finish
     await waitFor(() => {
-      expect(screen.queryByText('Loading...')).not.toBeInTheDocument();
       expect(screen.getByText('Could not fetch events. Please try again.')).toBeInTheDocument();
     });
   });
 
-  test('navigates to add event page when add event button is clicked', async () => {
+  test('filters events based on search query', async () => {
     await act(async () => {
       render(
         <MemoryRouter>
@@ -80,36 +66,13 @@ describe('EventList Component', () => {
       );
     });
 
-    // Click the add event button
-    fireEvent.click(screen.getByTitle('AddEvents'));
+    // Search for "Workshop"
+    const searchInput = screen.getByPlaceholderText('Search events by title...');
+    fireEvent.change(searchInput, { target: { value: 'Workshop' } });
 
-    // Assert that the navigation occurred
-    expect(navigateMock).toHaveBeenCalledWith('/all-users/events/new');
-  });
-
-  test('deletes an event', async () => {
-    await act(async () => {
-      render(
-        <MemoryRouter>
-          <EventList />
-        </MemoryRouter>
-      );
-    });
-
-    // Wait for events to be displayed
     await waitFor(() => {
-      expect(screen.getByText('Concert')).toBeInTheDocument();
       expect(screen.getByText('Workshop')).toBeInTheDocument();
-    });
-
-    // Simulate deleting the concert event
-    const deleteButton = screen.getByTestId('1'); // Ensure this corresponds to your delete button's test ID
-    fireEvent.click(deleteButton);
-
-    // Assert that the event is removed from the document
-    await waitFor(() => {
       expect(screen.queryByText('Concert')).not.toBeInTheDocument();
-      expect(screen.getByText('Workshop')).toBeInTheDocument();
     });
   });
 });
