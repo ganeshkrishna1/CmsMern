@@ -8,7 +8,8 @@ import {
   updateEvent,
   registerAttendee,
   getEventAttendees,
-  getEventsByOrganizerWithAttendeeCounts
+  getEventsByOrganizerWithAttendeeCounts,
+  getEventsByOrganizer
 } from '../controllers/eventController.js';
 import { protect, organizer, attendee, organizerOrAdmin } from '../middlewares/authMiddleware.js';
 
@@ -35,5 +36,8 @@ router.route('/:id')
   .get(getEventById)                   // Public
   .put(protect, organizer, updateEvent) // Only organizer can update
   .delete(protect, organizerOrAdmin, deleteEvent); // Organizer or Admin can delete
+  
+router.get('/organizer/:organizerId', protect, organizerOrAdmin, getEventsByOrganizer);
+
 
 export default router;

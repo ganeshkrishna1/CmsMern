@@ -3,20 +3,34 @@ import { axiosInstance } from '../../services/axiosInstance';
 import EventCard from '../../components/events/EventCard';
 import { IoMdAddCircleOutline } from "react-icons/io";
 import { useNavigate } from 'react-router-dom';
-import { isOrganizerOrAdmin } from '../../services/localStorageInfo';
+import { isOrganizer, isOrganizerOrAdmin, getUserInfo } from '../../services/localStorageInfo';
 
 const EventList = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [searchQuery, setSearchQuery] = useState(''); // State for search input
+  const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
+
+  // Fetch user details from localStorage
+  const user = getUserInfo();
+  const userId = user?._id;
+
+  // Get the current date
+  const currentDate = new Date().toISOString();
 
   useEffect(() => {
     const fetchEvents = async () => {
       try {
-        const { data } = await axiosInstance.get('/events');
-        setEvents(data);
+        let response;
+        if (isOrganizer()) {
+          // Fetch events specific to the organizer using userId
+          response = await axiosInstance.get(`/events/organizer/${userId}`);
+        } else {
+          // Fetch all events for attendees/admins
+          response = await axiosInstance.get('/events');
+        }
+        setEvents(response.data);
       } catch (error) {
         console.error('Error fetching events:', error);
         setError('Could not fetch events. Please try again.');
@@ -25,7 +39,7 @@ const EventList = () => {
       }
     };
     fetchEvents();
-  }, []);
+  }, [userId]);
 
   const handleAddEvents = () => {
     navigate('/all-users/events/new');
@@ -35,10 +49,18 @@ const EventList = () => {
     setEvents((prevEvents) => prevEvents.filter((event) => event._id !== eventId));
   };
 
-  // Filter events based on the search query
-  const filteredEvents = events.filter((event) =>
-    event.name.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // Filter events based on user role
+  const filteredEvents = events
+    .filter((event) => {
+      // If the user is an attendee, only show upcoming events
+      if (!isOrganizerOrAdmin()) {
+        return new Date(event.date) >= new Date(currentDate);
+      }
+      return true;
+    })
+    .filter((event) =>
+      event.name.toLowerCase().includes(searchQuery.toLowerCase())
+    );
 
   if (loading) {
     return <div className="flex justify-center items-center min-h-screen">Loading...</div>;
@@ -51,15 +73,14 @@ const EventList = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-10">Upcoming Events</h1>
-      
+
       {isOrganizerOrAdmin() && (
-        <div className='flex cursor-pointer p-3' title="AddEvents" onClick={handleAddEvents}>
+        <div className='flex cursor-pointer p-3' title="Add Events" onClick={handleAddEvents}>
           <IoMdAddCircleOutline className='text-4xl' />
-          <p className='text-2xl'>AddEvents</p>
+          <p className='text-2xl'>Add Events</p>
         </div>
       )}
 
-      {/* Search Input Field */}
       <div className="my-6">
         <input
           type="text"

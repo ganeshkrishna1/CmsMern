@@ -215,3 +215,15 @@ export const getEventsByOrganizerWithAttendeeCounts = asyncHandler(async (req, r
     res.status(500).json({ message: 'Error fetching events for the organizer', error: error.message }); // Include error message in response
   }
 });
+// In eventController.js
+export const getEventsByOrganizer = asyncHandler(async (req, res) => {
+  const { organizerId } = req.params;
+
+  try {
+    const events = await Event.find({ organizer: organizerId }).sort({ date: 1 });
+    res.status(200).json(events);
+  } catch (error) {
+    console.error('Error fetching events for organizer:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
