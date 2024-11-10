@@ -1,131 +1,119 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import SignupImage from '../../assets/signup.jpg'; // You can replace with your signup image
 import { axiosInstance } from "../../services/axiosInstance";
 
 const Signup = () => {
-  // Combined state for form data and errors
+  useEffect(() => {
+    document.title = "Sign Up"; // Matches test title expectation
+  }, []);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
-    role: "attendee", // Default role
-    errors: {
+    role: "attendee",
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    password: "",
+    general: "",
+  });
+
+  const navigate = useNavigate();
+
+  const validateInputs = () => {
+    const newErrors = {
       name: "",
       email: "",
       password: "",
-      role: "",
-    },
-  });
-  const navigate = useNavigate();
-
-  // Validate inputs
-  const validateInputs = () => {
-    let valid = true;
-    let newErrors = { name: "", email: "", password: "", role: "" };
+      general: "",
+    };
+    let isValid = true;
 
     // Name validation
-    if (!formData.name) {
-      newErrors.name = "Name is required.";
-      valid = false;
+    if (!formData.name.trim()) {
+      newErrors.name = "Name is required";
+      isValid = false;
     }
 
     // Email validation
-    if (!formData.email) {
-      newErrors.email = "Email is required.";
-      valid = false;
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid.";
-      valid = false;
+      newErrors.email = "Invalid email format";
+      isValid = false;
     }
 
     // Password validation
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
-      newErrors.password = "Password is required.";
-      valid = false;
-    } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "Password must contain at least 8 characters, one uppercase, one number, and one special character.";
-      valid = false;
+      newErrors.password = "Password is required";
+      isValid = false;
+    } else if (!/^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/.test(formData.password)) {
+      newErrors.password = "Password must contain at least 8 characters, one uppercase, one number, and one special character";
+      isValid = false;
     }
 
-    // Role validation (optional, if you want to enforce selection)
-    if (!formData.role) {
-      newErrors.role = "Role is required.";
-      valid = false;
-    }
-
-    setFormData((prevState) => ({
-      ...prevState,
-      errors: newErrors,
-    }));
-
-    return valid;
+    setErrors(newErrors);
+    return isValid;
   };
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    
     if (validateInputs()) {
-      console.log("Valid inputs. Sending API request...");
-
-      const signupData = {
-        name: formData.name,
-        email: formData.email,
-        password: formData.password,
-        role: formData.role, // Include the role in the signup data
-      };
-
       try {
-        // Make the POST request with axios
-        const response = await axiosInstance.post("/auth/register", signupData);
+        const response = await axiosInstance.post("/auth/register", {
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          role: formData.role,
+        });
 
-        navigate('/login');
+        if (response.data) {
+          navigate('/login');
+        }
       } catch (error) {
-        setFormData((prevState) => ({
-          ...prevState,
-          errors: { ...prevState.errors, general: 'Signup failed! Please try again.' },
+        setErrors(prev => ({
+          ...prev,
+          general: error.response?.data?.message || "Signup failed! Please try again."
         }));
       }
     }
   };
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
     }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-300 via-blue-300 to-purple-300">
-      {/* Card Container */}
       <div className="flex flex-col md:flex-row shadow-xl rounded-lg overflow-hidden w-4/5 max-w-4xl">
-        {/* Left side with Image - Hidden on small screens */}
         <div className="hidden md:flex w-1/2 bg-white items-center justify-center">
-          <img
-            src={SignupImage}
-            alt="Signup"
-            className="object-cover h-full"
-          />
+          <img src={SignupImage} alt="Signup" className="object-cover h-full" />
         </div>
-
-        {/* Right side with Form */}
         <div className="w-full md:w-1/2 bg-white p-8 flex items-center justify-center">
           <div className="w-full max-w-md">
             <div className="text-center mb-6">
               <h2 className="text-2xl font-bold">Welcome! 🎉</h2>
-              <p className="text-gray-500">
-                Create your account to get started.
-              </p>
+              <p className="text-gray-500">Create your account to get started.</p>
             </div>
 
-            {/* Signup Form */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="mb-4">
                 <input
                   type="text"
@@ -134,11 +122,8 @@ const Signup = () => {
                   value={formData.name}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
-                {formData.errors.name && (
-                  <p className="text-red-500 text-sm">{formData.errors.name}</p>
-                )}
+                {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
               </div>
 
               <div className="mb-4">
@@ -149,11 +134,8 @@ const Signup = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
-                {formData.errors.email && (
-                  <p className="text-red-500 text-sm">{formData.errors.email}</p>
-                )}
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
 
               <div className="mb-4">
@@ -164,17 +146,13 @@ const Signup = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  required
                 />
-                {formData.errors.password && (
-                  <p className="text-red-500 text-sm">{formData.errors.password}</p>
-                )}
+                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
               </div>
 
               <div className="mb-4">
                 <select
                   name="role"
-                  placeholder="role"
                   value={formData.role}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -182,9 +160,6 @@ const Signup = () => {
                   <option value="attendee">Attendee</option>
                   <option value="organizer">Organizer</option>
                 </select>
-                {formData.errors.role && (
-                  <p className="text-red-500 text-sm">{formData.errors.role}</p>
-                )}
               </div>
 
               <button
@@ -193,6 +168,10 @@ const Signup = () => {
               >
                 Sign Up
               </button>
+
+              {errors.general && (
+                <p className="text-red-500 text-sm text-center mt-4">{errors.general}</p>
+              )}
             </form>
 
             <div className="text-center mt-4">
@@ -203,12 +182,6 @@ const Signup = () => {
                 </NavLink>
               </p>
             </div>
-
-            {formData.errors.general && (
-              <p className="text-red-500 text-sm text-center mt-4">
-                {formData.errors.general}
-              </p>
-            )}
           </div>
         </div>
       </div>

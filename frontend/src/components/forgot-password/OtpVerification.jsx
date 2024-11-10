@@ -8,6 +8,8 @@ const OtpVerification = () => {
     const [timer, setTimer] = useState(60); // 1-minute countdown
     const [error, setError] = useState(''); // State for error messages
     const location = useLocation();
+    console.log(location);
+    
     const {email} = location.state;
     const navigate = useNavigate();
 
