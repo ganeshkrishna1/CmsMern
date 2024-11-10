@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import "./App.css";
 import LandingPage from "./pages/LandingPage";
@@ -27,13 +27,20 @@ import FeedbackList from "./pages/feedback/FeedbackList";
 
 function App() {
   const navigate = useNavigate();
+  const location = useLocation();
+  console.log(location);
+  const urls = ['/','/login','/signup','/forgot-password','/otp-verification','/update-password']
 
   // Redirect to home if not authenticated
   useEffect(() => {
-    if (!getUserInfo()) {
-      navigate("/");
+    if (!getUserInfo() ) {
+      if(urls.includes(location.pathname)){
+        navigate(`${location.pathname}`);
+      }else{
+        navigate('login');
+      }
     }
-  }, []);
+  }, [location.pathname]);
 
   return (
     <>
