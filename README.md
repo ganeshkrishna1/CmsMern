@@ -119,10 +119,4 @@ yourproject
 └── package.json  
 \`\`\`
 
-## 📷 Screenshots
 
-Include relevant screenshots of your application (event dashboard, attendee management, booking confirmation, etc.).
-
-## 📄 License
-
-This project is licensed under the MIT License. Happy coding! 🚀
