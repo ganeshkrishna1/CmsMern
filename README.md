@@ -28,44 +28,44 @@ Testing: React Testing Library, Jest
 
 Clone the repository and set up the environment variables:
 
-\`\`\`bash
+```bash
 git clone https://github.com/yourusername/yourproject.git
 cd yourproject
-\`\`\`
+```
 
 Create a `.env` file in both the `frontend` and `backend` directories with the following content:
 
 Backend `.env`:
 
-\`\`\`
+```
 MONGO_URI=your_mongodb_connection_string  
 JWT_SECRET=your_jwt_secret_key  
 STRIPE_SECRET_KEY=your_stripe_secret_key  
-\`\`\`
+```
 
 Frontend `.env`:
 
-\`\`\`
+```
 REACT_APP_STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key  
-\`\`\`
+```
 
 Install dependencies and run the application:
 
 For frontend:
 
-\`\`\`bash
+```bash
 cd frontend  
 npm install  
 npm run dev  
-\`\`\`
+```
 
 For backend:
 
-\`\`\`bash
+```bash
 cd ../backend  
 npm install  
 npm run dev  
-\`\`\`
+```
 
 ## 🔐 Authentication & Authorization
 
@@ -88,14 +88,14 @@ Protected Routes (Authenticated Users Only):
 
 To run the tests for the frontend:
 
-\`\`\`bash
+```bash
 cd frontend  
 npm run test  
-\`\`\`
+```
 
 ## 📂 Folder Structure
 
-\`\`\`
+```
 yourproject  
 ├── frontend  
 │   ├── public  
@@ -117,6 +117,7 @@ yourproject
 ├── .gitignore  
 ├── README.md  
 └── package.json  
-\`\`\`
+```
+
 
 
