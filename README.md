@@ -29,8 +29,8 @@ Testing: React Testing Library, Jest
 Clone the repository and set up the environment variables:
 
 ```bash
-git clone https://github.com/yourusername/yourproject.git
-cd yourproject
+git clone https://github.com/yourusername/CMSMern.git
+cd CMSMern
 ```
 
 Create a `.env` file in both the `frontend` and `backend` directories with the following content:
@@ -96,7 +96,7 @@ npm run test
 ## 📂 Folder Structure
 
 ```
-yourproject  
+CMSMern  
 ├── frontend  
 │   ├── public  
 │   ├── src  
