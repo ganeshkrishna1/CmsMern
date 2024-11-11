@@ -1,147 +1,123 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import LoginImage from '../../assets/login.jpg';
 import { axiosInstance } from "../../services/axiosInstance";
 import { setUserInfo } from "../../services/localStorageInfo";
 
 const Login = () => {
-  // Combined state for form data and errors
+  useEffect(() => {
+    document.title = "Login"; // Matches test title expectation
+  }, []);
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    errors: {
-      email: "",
-      password: "",
-    },
   });
+
+  const [errors, setErrors] = useState({
+    email: "",
+    password: "",
+    general: "",
+  });
+
   const navigate = useNavigate();
 
-  // Validate email and password
   const validateInputs = () => {
-    let valid = true;
-    let newErrors = { email: "", password: "" };
+    const newErrors = {
+      email: "",
+      password: "",
+      general: "",
+    };
+    let isValid = true;
 
     // Email validation
-    if (!formData.email) {
-      newErrors.email = "Email is required.";
-      valid = false;
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+      isValid = false;
     } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = "Email is invalid.";
-      valid = false;
+      newErrors.email = "Invalid email format";
+      isValid = false;
     }
 
     // Password validation
-    const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
     if (!formData.password) {
-      newErrors.password = "Password is required.";
-      valid = false;
-    } else if (!passwordRegex.test(formData.password)) {
-      newErrors.password = "Password must contain at least 8 characters, one uppercase, one number, and one special character.";
-      valid = false;
+      newErrors.password = "Password is required";
+      isValid = false;
     }
 
-    setFormData((prevState) => ({
-      ...prevState,
-      errors: newErrors,
-    }));
-
-    return valid;
+    setErrors(newErrors);
+    return isValid;
   };
 
-  // Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (validateInputs()) {
-      // Proceed with API call here
-      console.log("Valid inputs. Sending API request...");
-
-      const loginData = {
-        email: formData.email,
-        password: formData.password,
-      };
-
       try {
-        // Make the POST request with axios
-        const response = await axiosInstance.post("/auth/login", loginData);
+        const response = await axiosInstance.post("/auth/login", {
+          email: formData.email,
+          password: formData.password,
+        });
 
         if (response.data) {
-          console.log("Login successful!");
-          // Handle successful login (e.g., redirect, store token)
           setUserInfo(response.data);
           const role = response.data.role;
-          if (role === "admin") {
-            navigate("/all-users/dashboard"); // Redirect admin
-          } else if (role === "organizer") {
-            navigate("/all-users/events"); // Redirect organizer
-          } else {
-            navigate("/all-users/events"); // Redirect attendee to events page
-          }
           
-        } else {
-          setFormData((prevState) => ({
-            ...prevState,
-            errors: { ...prevState.errors, general: response.data.message },
-          }));
+          if (role === "admin") {
+            navigate("/all-users/dashboard");
+          } else {
+            navigate("/all-users/events");
+          }
         }
       } catch (error) {
-        console.error("Error during login:", error);
-        setFormData((prevState) => ({
-          ...prevState,
-          errors: { ...prevState.errors, general: error.response.data.message },
+        setErrors(prev => ({
+          ...prev,
+          general: error.response?.data?.message || "Login failed. Please try again.",
         }));
       }
     }
   };
 
-  // Handle input change
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prevState) => ({
-      ...prevState,
+    setFormData(prev => ({
+      ...prev,
       [name]: value,
     }));
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: "",
+      }));
+    }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-pink-300 via-blue-300 to-purple-300">
-      {/* Card Container */}
       <div className="flex flex-col md:flex-row shadow-xl rounded-lg overflow-hidden w-4/5 max-w-4xl">
-        {/* Left side with Image - Hidden on small screens */}
         <div className="hidden md:flex w-1/2 bg-white items-center justify-center">
-          <img
-            src={LoginImage}
-            alt="Conference Organizer"
-            className="object-cover h-full"
-          />
+          <img src={LoginImage} alt="Login" className="object-cover h-full" />
         </div>
 
-        {/* Right side with Form */}
         <div className="w-full md:w-1/2 bg-white p-8 flex items-center justify-center">
           <div className="w-full max-w-md">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold">Hey, hello</h2>
-              <p className="text-gray-500">
-                Enter the information you entered while registering.
-              </p>
+              <h2 className="text-2xl font-bold">Welcome Back! 👋</h2>
+              <p className="text-gray-500">Please login to continue.</p>
             </div>
 
-            {/* Login Form */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="mb-4">
                 <input
-                  type="text"
+                  type="email"
                   name="email"
                   placeholder="Email"
                   value={formData.email}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  // required
                 />
-                {formData.errors.email && (
-                  <p className="text-red-500 text-sm">{formData.errors.email}</p>
-                )}
+                {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
               </div>
 
               <div className="mb-4">
@@ -152,15 +128,11 @@ const Login = () => {
                   value={formData.password}
                   onChange={handleChange}
                   className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  // required
                 />
-                {formData.errors.password && (
-                  <p className="text-red-500 text-sm">{formData.errors.password}</p>
-                )}
+                {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
               </div>
 
               <div className="flex justify-between items-center mb-6">
-                <p>Don't remember password?</p>
                 <NavLink to="/forgot-password" className="text-blue-500 hover:underline">
                   Forgot password?
                 </NavLink>
@@ -172,6 +144,10 @@ const Login = () => {
               >
                 Login
               </button>
+
+              {errors.general && (
+                <p className="text-red-500 text-sm text-center mt-4">{errors.general}</p>
+              )}
             </form>
 
             <div className="text-center mt-4">
@@ -182,12 +158,6 @@ const Login = () => {
                 </NavLink>
               </p>
             </div>
-
-            {formData.errors.general && (
-              <p className="text-red-500 text-sm text-center mt-4">
-                {formData.errors.general}
-              </p>
-            )}
           </div>
         </div>
       </div>

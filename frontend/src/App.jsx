@@ -21,26 +21,22 @@ import AllUsersProtectedRoute from "./components/protectedroute/AllUsersProtecte
 import BookingSummary from "./pages/payments/BookingSummary";
 import PaymentPage from "./pages/payments/PaymentPage";
 import ConfirmationPage from "./pages/payments/ConfirmationPage";
-import Feedback from "../../backend/models/Feedback";
 import FeedbackForm from "./pages/feedback/Feedback";
 import FeedbackList from "./pages/feedback/FeedbackList";
 
 function App() {
   const navigate = useNavigate();
   const location = useLocation();
-  console.log(location);
-  const urls = ['/','/login','/signup','/forgot-password','/otp-verification','/update-password']
+  const urls = ['/', '/login', '/signup', '/forgot-password', '/otp-verification', '/update-password'];
 
-  // Redirect to home if not authenticated
   useEffect(() => {
-    if (!getUserInfo() ) {
-      if(urls.includes(location.pathname)){
-        navigate(`${location.pathname}`);
-      }else{
-        navigate('login');
-      }
+    const userInfo = getUserInfo();
+
+    // Redirect based on authentication status
+    if (!userInfo && !urls.includes(location.pathname)) {
+      navigate('/login');
     }
-  }, [location.pathname]);
+  }, [location, navigate]);
 
   return (
     <>
@@ -66,21 +62,16 @@ function App() {
                 <Route path="dashboard" element={<Dashboard />} />
                 <Route path="notifications" element={<Notifications />} />
                 <Route path="users" element={<AllUsers />} />
-
                 <Route path="events/new" element={<EventForm />} />
                 <Route path="events/edit/:eventId" element={<EventForm />} />
-
                 <Route path="attendee-management" element={<AttendeeManagement />} />
-
                 <Route path="myevents" element={<MyEvents />} />
                 <Route path="booking-summary/:eventId" element={<BookingSummary />} />
                 <Route path="payment/:bookingId" element={<PaymentPage />} />
                 <Route path="confirmation" element={<ConfirmationPage />} />
                 <Route path="events/feedback/:eventId" element={<FeedbackForm />} />
                 <Route path="events/view-feedback/:eventId" element={<FeedbackList />} />
-
               </Route>
-
             </Routes>
           </div>
         </div>
