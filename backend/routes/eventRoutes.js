@@ -34,8 +34,8 @@ router.get('/organizer/:organizerId/attendee-counts', protect, organizerOrAdmin,
 // Routes for getting, updating, and deleting a specific event by ID
 router.route('/:id')
   .get(getEventById)                   // Public
-  .put(protect, organizer, updateEvent) // Only organizer can update
-  .delete(protect, organizerOrAdmin, deleteEvent); // Organizer or Admin can delete
+  .put(protect, updateEvent) // Only organizer can update
+  .delete(protect, deleteEvent); // Organizer or Admin can delete
   
 router.get('/organizer/:organizerId', protect, organizerOrAdmin, getEventsByOrganizer);
 

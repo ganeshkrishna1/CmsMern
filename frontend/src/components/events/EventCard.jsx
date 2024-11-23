@@ -4,7 +4,7 @@ import { FaEye } from "react-icons/fa6";
 import { FaEdit } from "react-icons/fa";
 import { AiFillDelete } from "react-icons/ai";
 import { axiosInstance } from "../../services/axiosInstance";
-import { isOrganizerOrAdmin } from "../../services/localStorageInfo";
+import { isOrganizer, isOrganizerOrAdmin } from "../../services/localStorageInfo";
 import { differenceInCalendarDays, parseISO } from "date-fns";
 
 const EventCard = ({ event, onDelete }) => {
@@ -107,12 +107,14 @@ const handleViewFeedback = () => {
             onClick={handleViewDetails}
             className="text-3xl text-blue-500 cursor-pointer"
           />
+          {isOrganizer() && (
+            <FaEdit
+            onClick={handleEditDetails}
+            className="text-3xl text-orange-400 cursor-pointer"
+          />
+          )}
           {isOrganizerOrAdmin() && (
             <>
-              <FaEdit
-                onClick={handleEditDetails}
-                className="text-3xl text-orange-400 cursor-pointer"
-              />
               <AiFillDelete
                 onClick={handleDeleteDetails}
                 className="text-3xl text-red-500 cursor-pointer"
