@@ -74,7 +74,7 @@ const EventList = () => {
     <div className="container mx-auto px-4 py-8">
       <h1 className="text-4xl font-bold text-center mb-10">Upcoming Events</h1>
 
-      {isOrganizerOrAdmin() && (
+      {isOrganizer() && (
         <div className='flex cursor-pointer p-3' title="Add Events" onClick={handleAddEvents}>
           <IoMdAddCircleOutline className='text-4xl' />
           <p className='text-2xl'>Add Events</p>
